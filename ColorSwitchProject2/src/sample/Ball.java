@@ -66,6 +66,7 @@ public class Ball {
             ball.setLayoutY(posY);
             ball.setFill(magentaColor);
             root.getChildren().add(ball);
+
             gameplayScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent keyEvent) {
@@ -111,6 +112,7 @@ public class Ball {
                     for(Obstacle ob:obstacleArrayList){
                         ob.moveDown();
                     }
+                    Main.moveStars();
                     currentY = ball.getLayoutY();
                 }
 

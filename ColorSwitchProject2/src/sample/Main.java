@@ -25,7 +25,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class Main extends Application {
-
+    public static ArrayList<ImageView> Stars = new ArrayList<>();
     @Override
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
@@ -38,7 +38,7 @@ public class Main extends Application {
         launch(args);
     }
     public static void mainMenu(Stage primaryStage) throws FileNotFoundException {
-        System.out.println(System.getProperty("user.dir"));
+        //System.out.println(System.getProperty("user.dir"));
         Image image = new Image(new FileInputStream("library/logo.jpg"));
         ImageView imageView = new ImageView(image);
         imageView.setX(-78);
@@ -81,7 +81,7 @@ public class Main extends Application {
         playButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                System.out.println("Hello");
+               // System.out.println("Hello");
                 try {
                     gameStart(primaryStage);
                 } catch (FileNotFoundException e) {
@@ -102,7 +102,8 @@ public class Main extends Application {
         resumeButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                System.out.println("Hello2");
+                //System.out.println("Hello2");
+                savedStateScene(primaryStage);
             }
         });
         resumeButton.setLayoutX(132);
@@ -147,7 +148,7 @@ public class Main extends Application {
         score.setLayoutY(20);
         score.setStrokeWidth(500);
         root.getChildren().add(score);
-        System.out.println(System.getProperty("user.dir"));
+        //System.out.println(System.getProperty("user.dir"));
         Image finger = new Image(new FileInputStream("library/finger.jpeg"));
         ImageView imageView = new ImageView(finger);
         imageView.setX(135);
@@ -166,6 +167,17 @@ public class Main extends Application {
         root.getChildren().add(obstacle2.doubleCircleObstacle);
         obstacleArrayList.add(obstacle1);
         obstacleArrayList.add(obstacle2);
+
+        //Adding Star
+        Image star = new Image(new FileInputStream("library/star.jpeg"));
+        ImageView imageViewStar1 = new ImageView(star);
+        imageViewStar1.setX(obstacle1.getPosX() - 20);
+        imageViewStar1.setY(obstacle1.getPosY() - 20);
+        imageViewStar1.setFitHeight(40);
+        imageViewStar1.setFitWidth(40);
+        imageViewStar1.setPreserveRatio(true);
+        root.getChildren().add(imageViewStar1);
+        Stars.add(imageViewStar1);
         //Adding PauseGame Button;
         Button pauseButton = new Button();
         pauseButton.setText("PauseGame");
@@ -361,6 +373,27 @@ public class Main extends Application {
         menuButton.setStyle("-fx-background-color: #36e1f3; -fx-font-size: 1.5em;");
         root.getChildren().add(menuButton);
         primaryStage.setScene(endgameScene);
+        primaryStage.show();
+    }
+    public static void moveStars(){
+        for(ImageView star:Stars){
+            star.setLayoutY(star.getLayoutY() + 20);
+        }
+    }
+    public static void savedStateScene(Stage primaryStage){
+        primaryStage.setTitle("Saved State Screen");
+        Group root = new Group();
+        Scene savedStateScene = new Scene(root,450,650);
+        Color backgroundColor = Color.rgb(41,41,41);
+        savedStateScene.setFill(backgroundColor);
+        Text saveText = new Text("Reload from Saved State");
+        saveText.setFont(Font.font("WHITE", FontWeight.BOLD, FontPosture.REGULAR,20));
+        saveText.setFill(Color.WHITE);
+        saveText.setLayoutX(120);
+        saveText.setLayoutY(20);
+        saveText.setStrokeWidth(500);
+        root.getChildren().add(saveText);
+        primaryStage.setScene(savedStateScene);
         primaryStage.show();
     }
 }

@@ -101,6 +101,7 @@ public class CircleObstacle extends Obstacle{
     public void moveDown(){
         //System.out.println("Calling Move down");
         circleObstacle.setLayoutY(circleObstacle.getLayoutY() + 20);
+
     }
     @Override
     public Object getPosition() {
