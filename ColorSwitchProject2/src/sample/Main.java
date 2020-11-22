@@ -11,6 +11,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -19,6 +22,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class Main extends Application {
 
@@ -54,7 +58,11 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 System.out.println("Hello");
-                gameStart(primaryStage);
+                try {
+                    gameStart(primaryStage);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         playButton.setLayoutX(132);
@@ -99,36 +107,61 @@ public class Main extends Application {
         primaryStage.setScene(mainScreen);
         primaryStage.show();
     }
-    public static void gameStart(Stage primaryStage){
+    public static void gameStart(Stage primaryStage) throws FileNotFoundException {
         primaryStage.setTitle("GamePlay");
         Group root =   new Group();
         //Creating a scene for the gameplayScreen;
-        Scene gamePlayScreen = new Scene(root,450,650);
+        Scene gamePlayScene = new Scene(root,450,650);
         Color backgroundColor = Color.rgb(41,41,41);
-        gamePlayScreen.setFill(backgroundColor);
+        gamePlayScene.setFill(backgroundColor);
         //Adding Score Label
         Text score = new Text("Score:0");
-        score.setFont(Font.font("Cooper Black", FontWeight.BOLD, FontPosture.REGULAR,20));
+        score.setFont(Font.font("WHITE", FontWeight.BOLD, FontPosture.REGULAR,20));
+        score.setFill(Color.WHITE);
         score.setLayoutX(10);
         score.setLayoutY(20);
         score.setStrokeWidth(500);
         root.getChildren().add(score);
 
+
+
+        Ball gameBall = new Ball(primaryStage,root,gamePlayScene);
         //Adding PauseGame Button;
         Button pauseButton = new Button();
         pauseButton.setText("PauseGame");
         pauseButton.setMinSize(50,30);
-        pauseButton.setOnAction(new EventHandler<ActionEvent>() {
+//        pauseButton.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent actionEvent) {
+//                System.out.println("GamePaused");
+//            }
+//        });
+        pauseButton.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
-            public void handle(ActionEvent actionEvent) {
-                System.out.println("GamePaused");
+            public void handle(KeyEvent keyEvent) {
+                if(keyEvent.getCode() == KeyCode.P){
+                    System.out.println("Game Paused");
+                    gameBall.timeLine.pause();
+                }
             }
         });
         pauseButton.setLayoutX(370);
         pauseButton.setLayoutY(0);
         pauseButton.setStyle("-fx-background-color: #ff0080; -fx-font-size: 1em;");
         root.getChildren().add(pauseButton);
-        primaryStage.setScene(gamePlayScreen);
+//        Image finger = new Image(new FileInputStream("G:\\2nd Year\\AdvancedProgramming\\ColorSwitchProject2\\src\\finger.jpeg"));
+//        ImageView imageView = new ImageView(finger);
+//        imageView.setX(135);
+//        imageView.setY(460);
+//        imageView.setFitHeight(50);
+//        imageView.setFitWidth(600);
+//        imageView.setPreserveRatio(true);
+//        root.getChildren().add(imageView);
+//        gamePlayScene.setOnMousePressed(e ->{
+//            root.getChildren().remove(imageView);
+//        });
+
+        primaryStage.setScene(gamePlayScene);
         primaryStage.show();
 
 
