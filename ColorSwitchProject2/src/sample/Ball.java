@@ -55,6 +55,10 @@ public class Ball {
                 //move the ball
                 ball.setLayoutY(ball.getLayoutY() + velocity);
                 velocity = velocity + ddy;
+                if(ball.getLayoutY() >= 600){
+                    Main.endgameScreen(primaryStage);
+                    timeLine.stop();
+                }
             }
         }));
         timeLine.setCycleCount(Timeline.INDEFINITE);

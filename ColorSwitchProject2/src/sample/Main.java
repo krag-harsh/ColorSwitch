@@ -38,7 +38,7 @@ public class Main extends Application {
         launch(args);
     }
     public static void mainMenu(Stage primaryStage){
-        Image image = new Image("https://i.ytimg.com/vi/kJZ4qHVEWfY/maxresdefault.jpg");
+        Image image = new Image("library/logo.jpg");
         ImageView imageView = new ImageView(image);
         imageView.setX(-78);
         imageView.setY(0);
@@ -140,8 +140,9 @@ public class Main extends Application {
             @Override
             public void handle(KeyEvent keyEvent) {
                 if(keyEvent.getCode() == KeyCode.P){
-                    System.out.println("Game Paused");
+                    //System.out.println("Game Paused");
                     gameBall.timeLine.pause();
+                    pauseScreen(primaryStage,gamePlayScene,gameBall);
                 }
             }
         });
@@ -149,21 +150,106 @@ public class Main extends Application {
         pauseButton.setLayoutY(0);
         pauseButton.setStyle("-fx-background-color: #ff0080; -fx-font-size: 1em;");
         root.getChildren().add(pauseButton);
-//        Image finger = new Image(new FileInputStream("G:\\2nd Year\\AdvancedProgramming\\ColorSwitchProject2\\src\\finger.jpeg"));
-//        ImageView imageView = new ImageView(finger);
-//        imageView.setX(135);
-//        imageView.setY(460);
-//        imageView.setFitHeight(50);
-//        imageView.setFitWidth(600);
-//        imageView.setPreserveRatio(true);
-//        root.getChildren().add(imageView);
-//        gamePlayScene.setOnMousePressed(e ->{
-//            root.getChildren().remove(imageView);
-//        });
+        Image finger = new Image(new FileInputStream("G:\\2nd Year\\AdvancedProgramming\\ColorSwitchProject2\\src\\sample\\library\\finger.jpeg"));
+        ImageView imageView = new ImageView(finger);
+        imageView.setX(135);
+        imageView.setY(460);
+        imageView.setFitHeight(50);
+        imageView.setFitWidth(600);
+        imageView.setPreserveRatio(true);
+        root.getChildren().add(imageView);
+        gamePlayScene.setOnMousePressed(e ->{
+            root.getChildren().remove(imageView);
+        });
 
         primaryStage.setScene(gamePlayScene);
         primaryStage.show();
 
 
+    }
+    public static void pauseScreen(Stage primaryStage,Scene gameplayScene,Ball gameBall){
+        primaryStage.setTitle("Pause Screen");
+        Group root = new Group();
+        Scene pauseScene = new Scene(root,450,650);
+        Color backgroundColor = Color.rgb(41,41,41);
+        pauseScene.setFill(backgroundColor);
+        //Resume Button
+        Button resumeButton = new Button();
+        resumeButton.setText("Resume");
+        resumeButton.setMinSize(200,48);
+        resumeButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                resumeGame(primaryStage,gameplayScene,gameBall);
+            }
+        });
+        resumeButton.setLayoutX(132);
+        resumeButton.setLayoutY(250);
+        resumeButton.setStyle("-fx-background-color: #f6df0b; -fx-font-size: 1.5em;");
+        root.getChildren().add(resumeButton);
+
+        //Save State Button
+        Button saveButton = new Button();
+        saveButton.setText("Save State");
+        saveButton.setMinSize(200,48);
+        saveButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                System.out.println("State Saved");
+            }
+        });
+        saveButton.setLayoutX(132);
+        saveButton.setLayoutY(450);
+        saveButton.setStyle("-fx-background-color: #8d13fa; -fx-font-size: 1.5em;");
+        root.getChildren().add(saveButton);
+        primaryStage.setScene(pauseScene);
+        primaryStage.show();
+    }
+    public static void resumeGame(Stage primaryStage,Scene gameplayScene,Ball gameBall){
+        primaryStage.setScene(gameplayScene);
+        gameBall.timeLine.play();
+        primaryStage.show();
+    }
+    public static void endgameScreen(Stage primaryStage){
+        primaryStage.setTitle("EndGame Screen");
+        Group root = new Group();
+        Scene endgameScene = new Scene(root,450,650);
+        Color backgroundColor = Color.rgb(41,41,41);
+        endgameScene.setFill(backgroundColor);
+        //Resume Button
+        Button restartButton = new Button();
+        restartButton.setText("Restart");
+        restartButton.setMinSize(200,48);
+        restartButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                try {
+                    gameStart(primaryStage);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        restartButton.setLayoutX(132);
+        restartButton.setLayoutY(250);
+        restartButton.setStyle("-fx-background-color: #f6df0b; -fx-font-size: 1.5em;");
+        root.getChildren().add(restartButton);
+
+        //Save State Button
+        Button saveButton = new Button();
+        saveButton.setText("Save State");
+        saveButton.setMinSize(200,48);
+        saveButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                System.out.println("State Saved");
+            }
+        });
+        saveButton.setLayoutX(132);
+        saveButton.setLayoutY(450);
+        saveButton.setStyle("-fx-background-color: #8d13fa; -fx-font-size: 1.5em;");
+        root.getChildren().add(saveButton);
+        primaryStage.setScene(endgameScene);
+        primaryStage.show();
     }
 }
