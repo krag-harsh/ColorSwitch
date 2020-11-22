@@ -3,11 +3,8 @@ package sample;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,15 +12,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import javax.lang.model.type.NullType;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -41,21 +37,44 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    public static void mainMenu(Stage primaryStage){
-
-        Image image = new Image("library/logo.jpg");
+    public static void mainMenu(Stage primaryStage) throws FileNotFoundException {
+        System.out.println(System.getProperty("user.dir"));
+        Image image = new Image(new FileInputStream("library/logo.jpg"));
         ImageView imageView = new ImageView(image);
         imageView.setX(-78);
-        imageView.setY(0);
+        imageView.setY(-30);
         imageView.setFitHeight(450);
         imageView.setFitWidth(600);
         imageView.setPreserveRatio(true);
+
+        Image playlogo = new Image(new FileInputStream("library/playLogo.png"));
+        ImageView imageView2 = new ImageView(playlogo);
+        imageView2.setX(175);
+        imageView2.setY(150);
+        imageView2.setFitHeight(100);
+        imageView2.setFitWidth(100);
+        imageView2.setPreserveRatio(true);
         Group root =   new Group(imageView);
+        root.getChildren().add(imageView2);
         //Creating a scene for the mainScreen;
         Scene mainScreen = new Scene(root,450,650);
         Color backgroundColor = Color.rgb(41,41,41);
         mainScreen.setFill(backgroundColor);
         //Play Button
+//        Circle c = new Circle(50.0f,Color.rgb(93,93,93));
+//        c.setLayoutX(225);
+//        c.setLayoutY(200);
+//        root.getChildren().add(c);
+        //doubleCircle c1 = new doubleCircle(225,250,null,null);
+        menuAnimation c1 = new menuAnimation(225,200);
+        root.getChildren().addAll(c1.circleObstacle1,c1.circleObstacle2,c1.circleObstacle3);
+//        Polygon triangle = new Polygon();
+//        triangle.getPoints().addAll(255.0,200.00,
+//                185.0,175.0,
+//                185.0,225.0);
+//        triangle.setFill(Color.WHITE);
+//        triangle.setSmooth(true);
+//        root.getChildren().add(triangle);
         Button playButton = new Button();
         playButton.setText("Play");
         playButton.setMinSize(200,48);
@@ -128,8 +147,8 @@ public class Main extends Application {
         score.setLayoutY(20);
         score.setStrokeWidth(500);
         root.getChildren().add(score);
-
-        Image finger = new Image(new FileInputStream("G:\\2nd Year\\AdvancedProgramming\\ColorSwitchProject2\\src\\sample\\library\\finger.jpeg"));
+        System.out.println(System.getProperty("user.dir"));
+        Image finger = new Image(new FileInputStream("library/finger.jpeg"));
         ImageView imageView = new ImageView(finger);
         imageView.setX(135);
         imageView.setY(550);
@@ -140,7 +159,7 @@ public class Main extends Application {
 
         Ball gameBall = new Ball(primaryStage,root,gamePlayScene,imageView,obstacleArrayList);
 
-        Circle obstacle1 = new Circle(225,200, null,gameBall);
+        CircleObstacle obstacle1 = new CircleObstacle(225,200, null,gameBall);
         doubleCircle obstacle2 = new doubleCircle(225,-200,null,gameBall);
 
         root.getChildren().add(obstacle1.circleObstacle);
@@ -330,7 +349,11 @@ public class Main extends Application {
         menuButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                mainMenu(primaryStage);
+                try {
+                    mainMenu(primaryStage);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         menuButton.setLayoutX(132);
