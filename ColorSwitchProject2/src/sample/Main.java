@@ -15,14 +15,18 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javax.lang.model.type.NullType;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class Main extends Application {
 
@@ -38,6 +42,7 @@ public class Main extends Application {
         launch(args);
     }
     public static void mainMenu(Stage primaryStage){
+
         Image image = new Image("library/logo.jpg");
         ImageView imageView = new ImageView(image);
         imageView.setX(-78);
@@ -108,6 +113,7 @@ public class Main extends Application {
         primaryStage.show();
     }
     public static void gameStart(Stage primaryStage) throws FileNotFoundException {
+        ArrayList<Obstacle> obstacleArrayList = new ArrayList<>();
         primaryStage.setTitle("GamePlay");
         Group root =   new Group();
         //Creating a scene for the gameplayScreen;
@@ -123,9 +129,24 @@ public class Main extends Application {
         score.setStrokeWidth(500);
         root.getChildren().add(score);
 
+        Image finger = new Image(new FileInputStream("G:\\2nd Year\\AdvancedProgramming\\ColorSwitchProject2\\src\\sample\\library\\finger.jpeg"));
+        ImageView imageView = new ImageView(finger);
+        imageView.setX(135);
+        imageView.setY(550);
+        imageView.setFitHeight(50);
+        imageView.setFitWidth(600);
+        imageView.setPreserveRatio(true);
+        root.getChildren().add(imageView);
 
+        Ball gameBall = new Ball(primaryStage,root,gamePlayScene,imageView,obstacleArrayList);
 
-        Ball gameBall = new Ball(primaryStage,root,gamePlayScene);
+        Circle obstacle1 = new Circle(225,200, null,gameBall);
+        doubleCircle obstacle2 = new doubleCircle(225,-200,null,gameBall);
+
+        root.getChildren().add(obstacle1.circleObstacle);
+        root.getChildren().add(obstacle2.doubleCircleObstacle);
+        obstacleArrayList.add(obstacle1);
+        obstacleArrayList.add(obstacle2);
         //Adding PauseGame Button;
         Button pauseButton = new Button();
         pauseButton.setText("PauseGame");
@@ -150,17 +171,21 @@ public class Main extends Application {
         pauseButton.setLayoutY(0);
         pauseButton.setStyle("-fx-background-color: #ff0080; -fx-font-size: 1em;");
         root.getChildren().add(pauseButton);
-        Image finger = new Image(new FileInputStream("G:\\2nd Year\\AdvancedProgramming\\ColorSwitchProject2\\src\\sample\\library\\finger.jpeg"));
-        ImageView imageView = new ImageView(finger);
-        imageView.setX(135);
-        imageView.setY(460);
-        imageView.setFitHeight(50);
-        imageView.setFitWidth(600);
-        imageView.setPreserveRatio(true);
-        root.getChildren().add(imageView);
-        gamePlayScene.setOnMousePressed(e ->{
-            root.getChildren().remove(imageView);
-        });
+
+//        gamePlayScene.setOnMousePressed(e ->{
+//            root.getChildren().remove(imageView);
+//        });
+//        gamePlayScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+//            @Override
+//            public void handle(KeyEvent keyEvent) {
+//                if(gameBall.getScore() < 0){
+//                    gameBall.timeLine.play();
+//                    gameBall.setScore(0);
+//                    root.getChildren().remove(imageView);
+//                }
+//            }
+//        });
+
 
         primaryStage.setScene(gamePlayScene);
         primaryStage.show();
@@ -177,9 +202,15 @@ public class Main extends Application {
         Button resumeButton = new Button();
         resumeButton.setText("Resume");
         resumeButton.setMinSize(200,48);
-        resumeButton.setOnAction(new EventHandler<ActionEvent>() {
+//        resumeButton.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent actionEvent) {
+//                resumeGame(primaryStage,gameplayScene,gameBall);
+//            }
+//        });
+        resumeButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(ActionEvent actionEvent) {
+            public void handle(MouseEvent mouseEvent) {
                 resumeGame(primaryStage,gameplayScene,gameBall);
             }
         });
@@ -188,13 +219,26 @@ public class Main extends Application {
         resumeButton.setStyle("-fx-background-color: #f6df0b; -fx-font-size: 1.5em;");
         root.getChildren().add(resumeButton);
 
+        Text score = new Text("Score:0");
+        score.setFont(Font.font("WHITE", FontWeight.BOLD, FontPosture.REGULAR,20));
+        score.setFill(Color.WHITE);
+        score.setLayoutX(10);
+        score.setLayoutY(20);
+        score.setStrokeWidth(500);
+        root.getChildren().add(score);
         //Save State Button
         Button saveButton = new Button();
         saveButton.setText("Save State");
         saveButton.setMinSize(200,48);
-        saveButton.setOnAction(new EventHandler<ActionEvent>() {
+//        saveButton.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent actionEvent) {
+//                System.out.println("State Saved");
+//            }
+//        });
+        saveButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(ActionEvent actionEvent) {
+            public void handle(MouseEvent mouseEvent) {
                 System.out.println("State Saved");
             }
         });
@@ -216,13 +260,30 @@ public class Main extends Application {
         Scene endgameScene = new Scene(root,450,650);
         Color backgroundColor = Color.rgb(41,41,41);
         endgameScene.setFill(backgroundColor);
+        Text score = new Text("Score:0");
+        score.setFont(Font.font("WHITE", FontWeight.BOLD, FontPosture.REGULAR,20));
+        score.setFill(Color.WHITE);
+        score.setLayoutX(10);
+        score.setLayoutY(20);
+        score.setStrokeWidth(500);
+        root.getChildren().add(score);
         //Resume Button
         Button restartButton = new Button();
         restartButton.setText("Restart");
         restartButton.setMinSize(200,48);
-        restartButton.setOnAction(new EventHandler<ActionEvent>() {
+//        restartButton.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent actionEvent) {
+//                try {
+//                    gameStart(primaryStage);
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+        restartButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(ActionEvent actionEvent) {
+            public void handle(MouseEvent mouseEvent) {
                 try {
                     gameStart(primaryStage);
                 } catch (FileNotFoundException e) {
@@ -231,24 +292,51 @@ public class Main extends Application {
             }
         });
         restartButton.setLayoutX(132);
-        restartButton.setLayoutY(250);
+        restartButton.setLayoutY(150);
         restartButton.setStyle("-fx-background-color: #f6df0b; -fx-font-size: 1.5em;");
         root.getChildren().add(restartButton);
 
-        //Save State Button
-        Button saveButton = new Button();
-        saveButton.setText("Save State");
-        saveButton.setMinSize(200,48);
-        saveButton.setOnAction(new EventHandler<ActionEvent>() {
+        //Continue with points Button
+        Button continueButton = new Button();
+        continueButton.setText("Continue with Stars");
+        continueButton.setMinSize(200,48);
+//        continueButton.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent actionEvent) {
+//                System.out.println("Continuing with points...");
+//            }
+//        });
+        continueButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(ActionEvent actionEvent) {
-                System.out.println("State Saved");
+            public void handle(MouseEvent mouseEvent) {
+                System.out.println("Continuing with points...");
             }
         });
-        saveButton.setLayoutX(132);
-        saveButton.setLayoutY(450);
-        saveButton.setStyle("-fx-background-color: #8d13fa; -fx-font-size: 1.5em;");
-        root.getChildren().add(saveButton);
+        continueButton.setLayoutX(132);
+        continueButton.setLayoutY(250);
+        continueButton.setStyle("-fx-background-color: #8d13fa; -fx-font-size: 1.5em;");
+        root.getChildren().add(continueButton);
+
+        //Main Menu Button
+        Button menuButton = new Button();
+        menuButton.setText("Main Menu");
+        menuButton.setMinSize(200,48);
+//        menuButton.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent actionEvent) {
+//               mainMenu(primaryStage);
+//            }
+//        });
+        menuButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                mainMenu(primaryStage);
+            }
+        });
+        menuButton.setLayoutX(132);
+        menuButton.setLayoutY(350);
+        menuButton.setStyle("-fx-background-color: #36e1f3; -fx-font-size: 1.5em;");
+        root.getChildren().add(menuButton);
         primaryStage.setScene(endgameScene);
         primaryStage.show();
     }
