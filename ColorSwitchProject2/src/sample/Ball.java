@@ -27,9 +27,33 @@ public class Ball {
     private int starCount;
     private int score = -1;
     private Circle ball;
-    Timeline timeLine;
+    //Timeline timeLine;
     private ArrayList<Obstacle> obstacleArrayList;
     double currentY;
+
+    public float getVelocity() {
+        return velocity;
+    }
+
+    public ArrayList<Obstacle> getObstacleArrayList() {
+        return obstacleArrayList;
+    }
+
+    public void setObstacleArrayList(ArrayList<Obstacle> obstacleArrayList) {
+        this.obstacleArrayList = obstacleArrayList;
+    }
+
+    public void setVelocity(float velocity) {
+        this.velocity = velocity;
+    }
+
+    public double getCurrentY() {
+        return currentY;
+    }
+
+    public void setCurrentY(double currentY) {
+        this.currentY = currentY;
+    }
 
     public int getStarCount() {
         return starCount;
@@ -71,7 +95,7 @@ public class Ball {
                 @Override
                 public void handle(KeyEvent keyEvent) {
                     if(score<0) {
-                        timeLine.play();
+                        Main.timeLine.play();
                         score = 0;
                         root.getChildren().remove(imageView);
                     }
@@ -98,34 +122,35 @@ public class Ball {
         }));
         updateCurrY.setCycleCount(Timeline.INDEFINITE);
         updateCurrY.play();
-        timeLine = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler <ActionEvent>() {
-
-
-            float ddy = 0.15f;//Acceleration due to gravity;
-
-            @Override
-            public void handle(ActionEvent t) {
-                //move the ball
-                //System.out.println("InCurrentY:" + ball.getLayoutY());
-                if(ball.getLayoutY() <= currentY-40){
-                    //System.out.println("Into If");
-                    for(Obstacle ob:obstacleArrayList){
-                        ob.moveDown();
-                    }
-                    Main.moveStars();
-                    currentY = ball.getLayoutY();
-                }
-
-                ball.setLayoutY(ball.getLayoutY() + velocity);
-                velocity = velocity + ddy;
-                if(ball.getLayoutY() >= 600){
-                    Main.endgameScreen(primaryStage);
-                    timeLine.stop();
-                }
-            }
-        }));
-        timeLine.setCycleCount(Timeline.INDEFINITE);
-
+        Main.startTimeline(this,primaryStage);
+//        timeLine = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler <ActionEvent>() {
+//
+//
+//            float ddy = 0.15f;//Acceleration due to gravity;
+//
+//            @Override
+//            public void handle(ActionEvent t) {
+//                //move the ball
+//                //System.out.println("InCurrentY:" + ball.getLayoutY());
+//                if(ball.getLayoutY() <= currentY-40){
+//                    //System.out.println("Into If");
+//                    for(Obstacle ob:obstacleArrayList){
+//                        ob.moveDown();
+//                    }
+//                    Main.moveStars();
+//                    currentY = ball.getLayoutY();
+//                }
+//
+//                ball.setLayoutY(ball.getLayoutY() + velocity);
+//                velocity = velocity + ddy;
+//                if(ball.getLayoutY() >= 600){
+//                    Main.endgameScreen(primaryStage);
+//                    timeLine.stop();
+//                }
+//            }
+//        }));
+//        timeLine.setCycleCount(Timeline.INDEFINITE);
+//
         return 0;
     }
     public void changePosition(){

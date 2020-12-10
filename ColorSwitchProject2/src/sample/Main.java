@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,13 +14,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 
 public class Main extends Application {
     public static ArrayList<ImageView> Stars = new ArrayList<>();
+    public static Timeline timeLine;
     @Override
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
@@ -162,17 +164,20 @@ public class Main extends Application {
 
         CircleObstacle obstacle1 = new CircleObstacle(225,200, null,gameBall);
         doubleCircle obstacle2 = new doubleCircle(225,-200,null,gameBall);
-
+        tripleCircle obstacle3 = new tripleCircle(225,-600,null,gameBall);
+        Plus obstacle4 = new Plus(150,-200,null,gameBall);
         root.getChildren().add(obstacle1.circleObstacle);
-        root.getChildren().add(obstacle2.doubleCircleObstacle);
+        root.getChildren().add(obstacle4.plusObstacle);
+        root.getChildren().add(obstacle3.tripleCircleObstacle);
         obstacleArrayList.add(obstacle1);
-        obstacleArrayList.add(obstacle2);
+        obstacleArrayList.add(obstacle4);
+        obstacleArrayList.add(obstacle3);
 
         //Adding Star
         Image star = new Image(new FileInputStream("library/star.jpeg"));
         ImageView imageViewStar1 = new ImageView(star);
-        imageViewStar1.setX(obstacle1.getPosX() - 20);
-        imageViewStar1.setY(obstacle1.getPosY() - 20);
+        imageViewStar1.setLayoutX(obstacle1.getPosX() - 20);
+        imageViewStar1.setLayoutY(obstacle1.getPosY() - 20);
         imageViewStar1.setFitHeight(40);
         imageViewStar1.setFitWidth(40);
         imageViewStar1.setPreserveRatio(true);
@@ -193,7 +198,7 @@ public class Main extends Application {
             public void handle(KeyEvent keyEvent) {
                 if(keyEvent.getCode() == KeyCode.P){
                     //System.out.println("Game Paused");
-                    gameBall.timeLine.pause();
+                    timeLine.pause();
                     pauseScreen(primaryStage,gamePlayScene,gameBall);
                 }
             }
@@ -282,7 +287,7 @@ public class Main extends Application {
     }
     public static void resumeGame(Stage primaryStage,Scene gameplayScene,Ball gameBall){
         primaryStage.setScene(gameplayScene);
-        gameBall.timeLine.play();
+        timeLine.play();
         primaryStage.show();
     }
     public static void endgameScreen(Stage primaryStage){
@@ -395,5 +400,43 @@ public class Main extends Application {
         root.getChildren().add(saveText);
         primaryStage.setScene(savedStateScene);
         primaryStage.show();
+    }
+    public static void startTimeline(Ball gameBall,Stage primaryStage){
+        timeLine = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler <ActionEvent>() {
+
+
+            float ddy = 0.15f;//Acceleration due to gravity;
+
+            @Override
+            public void handle(ActionEvent t) {
+                //move the ball
+                //System.out.println("InCurrentY:" + ball.getLayoutY());
+                for(ImageView star:Stars){
+                    System.out.println("Star" + (star.getLayoutY() + 20));
+                    System.out.println("Ball" + gameBall.getBall().getLayoutY());
+                    if((star.getLayoutY() + 20) >= gameBall.getBall().getLayoutY()){
+                        star.setVisible(false);
+                        //System.out.println("Test");
+                    }
+                }
+                if(gameBall.getBall().getLayoutY() <= gameBall.getCurrentY()-40){
+                    //System.out.println("Into If");
+                    for(Obstacle ob:gameBall.getObstacleArrayList()){
+                        ob.moveDown();
+                    }
+                    Main.moveStars();
+                    gameBall.setCurrentY(gameBall.getBall().getLayoutY());
+                }
+
+                gameBall.getBall().setLayoutY(gameBall.getBall().getLayoutY() + gameBall.getVelocity());
+                gameBall.setVelocity(gameBall.getVelocity() + ddy);
+                if(gameBall.getBall().getLayoutY() >= 600){
+                    Main.endgameScreen(primaryStage);
+                    timeLine.stop();
+                }
+            }
+        }));
+        timeLine.setCycleCount(Timeline.INDEFINITE);
+
     }
 }
