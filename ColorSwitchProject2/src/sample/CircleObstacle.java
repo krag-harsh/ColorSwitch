@@ -1,10 +1,14 @@
 package sample;
 
 import javafx.animation.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -12,6 +16,7 @@ import java.security.Key;
 
 public class CircleObstacle extends Obstacle{
     Group circleObstacle;
+
     public CircleObstacle(int posX, int posY, Object Orientation, Ball gameBall){
         Color purpleColor = Color.rgb(141,20,249);
         Color yellowColor = Color.rgb(245,224,13);
@@ -32,6 +37,7 @@ public class CircleObstacle extends Obstacle{
         arc1.setLength(90.0f);
         arc1.setFill(Color.TRANSPARENT);
         arc1.setType(ArcType.OPEN);
+        arc1.setId("purple");
 
         Arc arc2 = new Arc();
         arc2.setStroke(yellowColor);
@@ -44,6 +50,7 @@ public class CircleObstacle extends Obstacle{
         arc2.setLength(90.0f);
         arc2.setFill(Color.TRANSPARENT);
         arc2.setType(ArcType.OPEN);
+        arc2.setId("yellow");
 
         Arc arc3 = new Arc();
         arc3.setStroke(cyanColor);
@@ -56,6 +63,7 @@ public class CircleObstacle extends Obstacle{
         arc3.setLength(90.0f);
         arc3.setFill(Color.TRANSPARENT);
         arc3.setType(ArcType.OPEN);
+        arc3.setId("cyan");
 
         Arc arc4 = new Arc();
         arc4.setStroke(magentaColor);
@@ -68,6 +76,16 @@ public class CircleObstacle extends Obstacle{
         arc4.setLength(90.0f);
         arc4.setFill(Color.TRANSPARENT);
         arc4.setType(ArcType.OPEN);
+        arc4.setId("magenta");
+
+//        arc1.setLayoutX(posX);
+//        arc1.setLayoutY(posY);
+//        arc2.setLayoutX(posX);
+//        arc2.setLayoutY(posY);
+//        arc3.setLayoutX(posX);
+//        arc3.setLayoutY(posY);
+//        arc4.setLayoutX(posX);
+//        arc4.setLayoutY(posY);
 
         circleObstacle = new Group();
         circleObstacle.getChildren().addAll(arc1,arc2,arc3,arc4);
@@ -96,11 +114,15 @@ public class CircleObstacle extends Obstacle{
         rotate.setInterpolator(Interpolator.LINEAR);
         rotate.setNode(circleObstacle);
         rotate.play();
+
+
+
+        checkCollision();
     }
     @Override
     public void moveDown(){
         //System.out.println("Calling Move down");
-        circleObstacle.setLayoutY(circleObstacle.getLayoutY() + 20);
+        //circleObstacle.setLayoutY(circleObstacle.getLayoutY() + 20);
 
     }
     @Override
@@ -115,6 +137,30 @@ public class CircleObstacle extends Obstacle{
 
     @Override
     public Boolean checkCollision() {
+        Timeline collision = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                for(Node n:circleObstacle.getChildren()){
+                    Arc arc = (Arc) n;
+                    Shape intersect = Shape.intersect(arc,getGameBall().getBall());
+                    if(intersect.getBoundsInLocal().getWidth() != -1);{
+                        System.out.println("Collision Detected");
+                    }
+//                    if(arc.getId() == "purple") {
+//                        System.out.println(circleObstacle.getLayoutX());
+//                        if (arc.intersects(getGameBall().getBall().getBoundsInParent())) {
+//                            System.out.println("Collision with" + arc.getStroke());
+//                        }
+//                    }
+
+
+
+                }
+            }
+        }));
+        collision.setCycleCount(Timeline.INDEFINITE);
+        collision.play();
         return null;
     }
 }
