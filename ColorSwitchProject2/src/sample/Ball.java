@@ -122,7 +122,7 @@ public class Ball {
         }));
         updateCurrY.setCycleCount(Timeline.INDEFINITE);
         updateCurrY.play();
-        Main.startTimeline(this,primaryStage);
+
 //        timeLine = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler <ActionEvent>() {
 //
 //

@@ -29,6 +29,7 @@ import java.util.Iterator;
 public class Main extends Application {
     public static ArrayList<ImageView> Stars = new ArrayList<>();
     public static Timeline timeLine;
+    public static ArrayList<Obstacle> obstacleArrayList;
     @Override
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
@@ -136,7 +137,7 @@ public class Main extends Application {
         primaryStage.show();
     }
     public static void gameStart(Stage primaryStage) throws FileNotFoundException {
-        ArrayList<Obstacle> obstacleArrayList = new ArrayList<>();
+        obstacleArrayList = new ArrayList<>();
         primaryStage.setTitle("GamePlay");
         Group root =   new Group();
         //Creating a scene for the gameplayScreen;
@@ -162,26 +163,28 @@ public class Main extends Application {
         root.getChildren().add(imageView);
 
         Ball gameBall = new Ball(primaryStage,root,gamePlayScene,imageView,obstacleArrayList);
+        startTimeline(gameBall,primaryStage);
 //
 //        CircleObstacle obstacle1 = new CircleObstacle(225,200, null,gameBall);
-//        doubleCircle obstacle2 = new doubleCircle(225,-200,null,gameBall);
-//        tripleCircle obstacle3 = new tripleCircle(225,-600,null,gameBall);
-//        Plus obstacle4 = new Plus(150,-200,null,gameBall);
-        SquareTest obstacle5 = new SquareTest(225,200,null,gameBall);
+//        doubleCircle obstacle2 = new doubleCircle(225,200,null,gameBall);
+          tripleCircle obstacle3 = new tripleCircle(225,200,null,gameBall);
+//          Plus obstacle4 = new Plus(225,200,null,gameBall);
+//        Square obstacle5 = new Square(225,200,null,gameBall);
+//          Rhombus obstacle6 = new Rhombus(225,200,null,gameBall);
 //        root.getChildren().add(obstacle1.circleObstacle);
 //        root.getChildren().add(obstacle4.plusObstacle);
 //        root.getChildren().add(obstacle3.tripleCircleObstacle);
 //        obstacleArrayList.add(obstacle1);
 //        obstacleArrayList.add(obstacle4);
 //        obstacleArrayList.add(obstacle3);
-        root.getChildren().addAll(obstacle5.line1,obstacle5.line2,obstacle5.line3,obstacle5.line4);
-        obstacleArrayList.add(obstacle5);
+        root.getChildren().addAll(obstacle3.Arcs);
+        obstacleArrayList.add(obstacle3);
 
         //Adding Star
         Image star = new Image(new FileInputStream("library/star.jpeg"));
         ImageView imageViewStar1 = new ImageView(star);
-        imageViewStar1.setLayoutX(obstacle5.getPosX() - 20);
-        imageViewStar1.setLayoutY(obstacle5.getPosY() - 20);
+        imageViewStar1.setLayoutX(205);
+        imageViewStar1.setLayoutY(obstacle3.getPosY() - 20);
         imageViewStar1.setFitHeight(40);
         imageViewStar1.setFitWidth(40);
         imageViewStar1.setPreserveRatio(true);
@@ -203,6 +206,9 @@ public class Main extends Application {
                 if(keyEvent.getCode() == KeyCode.P){
                     //System.out.println("Game Paused");
                     timeLine.pause();
+                    for(Obstacle ob:obstacleArrayList){
+                        ob.pauseTimeline();
+                    }
                     pauseScreen(primaryStage,gamePlayScene,gameBall);
                 }
             }
@@ -292,6 +298,9 @@ public class Main extends Application {
     public static void resumeGame(Stage primaryStage,Scene gameplayScene,Ball gameBall){
         primaryStage.setScene(gameplayScene);
         timeLine.play();
+        for(Obstacle ob:obstacleArrayList){
+            ob.resumeTimeline();
+        }
         primaryStage.show();
     }
     public static void endgameScreen(Stage primaryStage){
@@ -443,6 +452,9 @@ public class Main extends Application {
                 if(gameBall.getBall().getLayoutY() >= 600){
                     Main.endgameScreen(primaryStage);
                     timeLine.stop();
+                    for(Obstacle ob:obstacleArrayList){
+                        ob.pauseTimeline();
+                    }
                 }
             }
         }));

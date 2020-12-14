@@ -1,10 +1,15 @@
 package sample;
 
 import javafx.animation.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -12,6 +17,7 @@ import java.security.Key;
 
 public class tripleCircle extends Obstacle{
     Group tripleCircleObstacle;
+    Arc Arcs[];
     public tripleCircle(int posX,int posY,Object Orientation,Ball gameBall){
         Color purpleColor = Color.rgb(141,20,249);
         Color yellowColor = Color.rgb(245,224,13);
@@ -21,8 +27,10 @@ public class tripleCircle extends Obstacle{
         this.setPosY(posY);
         this.setOrientation(Orientation);
         this.setGameBall(gameBall);
+
         Arc arc1 =new Arc();
         arc1.setStroke(purpleColor);
+        arc1.setId("purple");
         arc1.setStrokeWidth(10);
         arc1.setCenterX(posX);
         arc1.setCenterY(posY);
@@ -35,6 +43,7 @@ public class tripleCircle extends Obstacle{
 
         Arc arc1a =new Arc();
         arc1a.setStroke(purpleColor);
+        arc1a.setId("purple");
         arc1a.setStrokeWidth(10);
         arc1a.setCenterX(posX);
         arc1a.setCenterY(posY);
@@ -47,6 +56,7 @@ public class tripleCircle extends Obstacle{
 
         Arc arc1b =new Arc();
         arc1b.setStroke(purpleColor);
+        arc1b.setId("purple");
         arc1b.setStrokeWidth(10);
         arc1b.setCenterX(posX);
         arc1b.setCenterY(posY);
@@ -59,6 +69,7 @@ public class tripleCircle extends Obstacle{
 
         Arc arc2 = new Arc();
         arc2.setStroke(yellowColor);
+        arc2.setId("yellow");
         arc2.setStrokeWidth(10);
         arc2.setCenterX(posX);
         arc2.setCenterY(posY);
@@ -71,6 +82,7 @@ public class tripleCircle extends Obstacle{
 
         Arc arc2a = new Arc();
         arc2a.setStroke(yellowColor);
+        arc2a.setId("yellow");
         arc2a.setStrokeWidth(10);
         arc2a.setCenterX(posX);
         arc2a.setCenterY(posY);
@@ -83,6 +95,7 @@ public class tripleCircle extends Obstacle{
 
         Arc arc2b = new Arc();
         arc2b.setStroke(yellowColor);
+        arc2b.setId("yellow");
         arc2b.setStrokeWidth(10);
         arc2b.setCenterX(posX);
         arc2b.setCenterY(posY);
@@ -95,6 +108,7 @@ public class tripleCircle extends Obstacle{
 
         Arc arc3 = new Arc();
         arc3.setStroke(cyanColor);
+        arc3.setId("cyan");
         arc3.setStrokeWidth(10);
         arc3.setCenterX(posX);
         arc3.setCenterY(posY);
@@ -108,6 +122,7 @@ public class tripleCircle extends Obstacle{
 
         Arc arc3a = new Arc();
         arc3a.setStroke(cyanColor);
+        arc3a.setId("cyan");
         arc3a.setStrokeWidth(10);
         arc3a.setCenterX(posX);
         arc3a.setCenterY(posY);
@@ -120,6 +135,7 @@ public class tripleCircle extends Obstacle{
 
         Arc arc3b = new Arc();
         arc3b.setStroke(cyanColor);
+        arc3b.setId("cyan");
         arc3b.setStrokeWidth(10);
         arc3b.setCenterX(posX);
         arc3b.setCenterY(posY);
@@ -132,6 +148,7 @@ public class tripleCircle extends Obstacle{
 
         Arc arc4 = new Arc();
         arc4.setStroke(magentaColor);
+        arc4.setId("magenta");
         arc4.setStrokeWidth(10);
         arc4.setCenterX(posX);
         arc4.setCenterY(posY);
@@ -144,6 +161,7 @@ public class tripleCircle extends Obstacle{
 
         Arc arc4a = new Arc();
         arc4a.setStroke(magentaColor);
+        arc4a.setId("magenta");
         arc4a.setStrokeWidth(10);
         arc4a.setCenterX(posX);
         arc4a.setCenterY(posY);
@@ -156,6 +174,7 @@ public class tripleCircle extends Obstacle{
 
         Arc arc4b = new Arc();
         arc4b.setStroke(magentaColor);
+        arc4b.setId("magenta");
         arc4b.setStrokeWidth(10);
         arc4b.setCenterX(posX);
         arc4b.setCenterY(posY);
@@ -166,38 +185,74 @@ public class tripleCircle extends Obstacle{
         arc4b.setFill(Color.TRANSPARENT);
         arc4b.setType(ArcType.OPEN);
 
-        tripleCircleObstacle = new Group();
-        tripleCircleObstacle.getChildren().addAll(arc1,arc1a,arc2,arc2a,arc3,arc3a,arc4,arc4a,arc1b,arc2b,arc3b,arc4b);
+        Arcs = new Arc[12];
+        Arcs[0] = arc1;
+        Arcs[1] = arc1a;
+        Arcs[2] = arc2;
+        Arcs[3] = arc2a;
+        Arcs[4] = arc3;
+        Arcs[5] = arc3a;
+        Arcs[6] = arc4;
+        Arcs[7] = arc4a;
+        Arcs[8] = arc1b;
+        Arcs[9] = arc2b;
+        Arcs[10] = arc3b;
+        Arcs[11] = arc4b;
+
+
+
+//        tripleCircleObstacle = new Group();
+//        tripleCircleObstacle.getChildren().addAll(arc1,arc1a,arc2,arc2a,arc3,arc3a,arc4,arc4a,arc1b,arc2b,arc3b,arc4b);
 //        Rotate rotate = new Rotate(5,posX,posY);
 //        //rotate.setAngle(50);
 //        circleObstacle.getTransforms().add(rotate);
-//        Timeline timeline = new Timeline();
-////        KeyFrame key1 = new KeyFrame(
-////                new javafx.util.Duration(0),
-////                new KeyValue(rotate.angleProperty(),0)
-////        );
-//        KeyFrame key2 =new KeyFrame(
-//                new javafx.util.Duration(2500),
-//                new KeyValue(rotate.angleProperty(),360)
-//        );
-//        timeline.setCycleCount(Animation.INDEFINITE);
-//        timeline.getKeyFrames().addAll(key2);
-//        timeline.playFromStart();
-        RotateTransition rotate = new RotateTransition();
-        rotate.setAxis(Rotate.Z_AXIS);
-        rotate.setByAngle(360);
-        rotate.setCycleCount(Animation.INDEFINITE);
-        rotate.setDuration(Duration.INDEFINITE);
-        rotate.setAutoReverse(false);
-        rotate.setRate(0.10);
-        rotate.setInterpolator(Interpolator.LINEAR);
-        rotate.setNode(tripleCircleObstacle);
-        rotate.play();
+        Rotate rotate = new Rotate(15.0f,posX,posY);
+        //rotate.setAngle(50);
+//        squareObstacle.getTransforms().add(rotate);
+        arc1.getTransforms().add(rotate);
+        arc2.getTransforms().add(rotate);
+        arc3.getTransforms().add(rotate);
+        arc4.getTransforms().add(rotate);
+        arc1a.getTransforms().add(rotate);
+        arc2a.getTransforms().add(rotate);
+        arc3a.getTransforms().add(rotate);
+        arc4a.getTransforms().add(rotate);
+        arc1b.getTransforms().add(rotate);
+        arc2b.getTransforms().add(rotate);
+        arc3b.getTransforms().add(rotate);
+        arc4b.getTransforms().add(rotate);
+
+        rotationTimeline = new Timeline();
+        KeyFrame key1 = new KeyFrame(
+                new javafx.util.Duration(0),
+                new KeyValue(rotate.angleProperty(),0)
+        );
+        KeyFrame key2 =new KeyFrame(
+                new javafx.util.Duration(2800),
+                new KeyValue(rotate.angleProperty(),360)
+        );
+        rotationTimeline.setCycleCount(Animation.INDEFINITE);
+        rotationTimeline.getKeyFrames().addAll(key1,key2);
+        rotationTimeline.playFromStart();
+
+        checkCollision();
+//        RotateTransition rotate = new RotateTransition();
+//        rotate.setAxis(Rotate.Z_AXIS);
+//        rotate.setByAngle(360);
+//        rotate.setCycleCount(Animation.INDEFINITE);
+//        rotate.setDuration(Duration.INDEFINITE);
+//        rotate.setAutoReverse(false);
+//        rotate.setRate(0.10);
+//        rotate.setInterpolator(Interpolator.LINEAR);
+//        rotate.setNode(tripleCircleObstacle);
+//        rotate.play();
     }
     @Override
     public void moveDown(){
         //System.out.println("Calling Move down");
-        tripleCircleObstacle.setLayoutY(tripleCircleObstacle.getLayoutY() + 20);
+        for(Arc arc:Arcs){
+            arc.setLayoutY(arc.getLayoutY() + 20);
+        }
 
     }
     @Override
@@ -212,6 +267,18 @@ public class tripleCircle extends Obstacle{
 
     @Override
     public Boolean checkCollision() {
+        Arcs[0].boundsInParentProperty().addListener((ChangeListener<? super Bounds>) new ChangeListener<Bounds>(){
+
+            @Override
+            public void changed(ObservableValue<? extends Bounds> observableValue, Bounds bounds, Bounds t1) {
+                //System.out.println("Changed");
+                for(Arc arc:Arcs){
+                    if(((Path) Shape.intersect(getGameBall().getBall(),arc)).getElements().size() > 0){
+                        System.out.println("Collision With " + arc.getId());
+                    }
+                }
+            }
+        });
         return null;
     }
 }

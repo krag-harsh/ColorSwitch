@@ -6,10 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -18,6 +15,7 @@ import java.security.Key;
 public class SquareTest extends Obstacle{
     Group squareObstacle;
     Line line1,line2,line3,line4;
+    Line Lines[] = {line1,line2,line3,line4};
     public SquareTest(int posX, int posY, Object Orientation, Ball gameBall){
         Color purpleColor = Color.rgb(141,20,249);
         Color yellowColor = Color.rgb(245,224,13);
@@ -27,6 +25,8 @@ public class SquareTest extends Obstacle{
         this.setPosY(posY);
         this.setOrientation(Orientation);
         this.setGameBall(gameBall);
+
+        Rectangle r1 = new Rectangle();
 
         line1 = new Line();
         line1.setStrokeWidth(10);
@@ -66,11 +66,11 @@ public class SquareTest extends Obstacle{
 
 
 //        squareObstacle = new Group();
-//        squareObstacle.getChildren().addAll(line1,line2,line3,line4);
+//        squareObstacle.getChildren().addAll(Lines[0],line2,line3,line4);
         Rotate rotate = new Rotate(15.0f,posX,posY);
         //rotate.setAngle(50);
 //        squareObstacle.getTransforms().add(rotate);
-        line1.getTransforms().add(rotate);
+        Lines[0].getTransforms().add(rotate);
         line2.getTransforms().add(rotate);
         line3.getTransforms().add(rotate);
         line4.getTransforms().add(rotate);
@@ -103,7 +103,7 @@ public class SquareTest extends Obstacle{
     public void moveDown(){
         //System.out.println("Calling Move down");
         //squareObstacle.setLayoutY(squareObstacle.getLayoutY() + 20);
-        line1.setLayoutY(line1.getLayoutY() + 20);
+        Lines[0].setLayoutY(Lines[0].getLayoutY() + 20);
         line2.setLayoutY(line2.getLayoutY() + 20);
         line3.setLayoutY(line3.getLayoutY() + 20);
         line4.setLayoutY(line4.getLayoutY() + 20);
@@ -125,9 +125,9 @@ public class SquareTest extends Obstacle{
             @Override
             public void handle(ActionEvent actionEvent) {
 
-                //System.out.println("Purple" + line1.getBoundsInParent());
+                //System.out.println("Purple" + Lines[0].getBoundsInParent());
 
-                for(Line line: new Line[]{line1, line2, line3, line4}){
+                for(Line line: Lines){
 
 
 //                    System.out.println("outside" + c);

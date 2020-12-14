@@ -1,14 +1,15 @@
 package sample;
 
 import javafx.animation.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -16,7 +17,7 @@ import java.security.Key;
 
 public class CircleObstacle extends Obstacle{
     Group circleObstacle;
-
+    Arc Arcs[];
     public CircleObstacle(int posX, int posY, Object Orientation, Ball gameBall){
         Color purpleColor = Color.rgb(141,20,249);
         Color yellowColor = Color.rgb(245,224,13);
@@ -78,6 +79,11 @@ public class CircleObstacle extends Obstacle{
         arc4.setType(ArcType.OPEN);
         arc4.setId("magenta");
 
+        Arcs = new Arc[4];
+        Arcs[0] = arc1;
+        Arcs[1] = arc2;
+        Arcs[2] = arc3;
+        Arcs[3] = arc4;
 //        arc1.setLayoutX(posX);
 //        arc1.setLayoutY(posY);
 //        arc2.setLayoutX(posX);
@@ -87,33 +93,37 @@ public class CircleObstacle extends Obstacle{
 //        arc4.setLayoutX(posX);
 //        arc4.setLayoutY(posY);
 
-        circleObstacle = new Group();
-        circleObstacle.getChildren().addAll(arc1,arc2,arc3,arc4);
-//        Rotate rotate = new Rotate(5,posX,posY);
-//        //rotate.setAngle(50);
-//        circleObstacle.getTransforms().add(rotate);
-//        Timeline timeline = new Timeline();
-////        KeyFrame key1 = new KeyFrame(
-////                new javafx.util.Duration(0),
-////                new KeyValue(rotate.angleProperty(),0)
-////        );
-//        KeyFrame key2 =new KeyFrame(
-//                new javafx.util.Duration(2500),
-//                new KeyValue(rotate.angleProperty(),360)
-//        );
-//        timeline.setCycleCount(Animation.INDEFINITE);
-//        timeline.getKeyFrames().addAll(key2);
-//        timeline.playFromStart();
-        RotateTransition rotate = new RotateTransition();
-        rotate.setAxis(Rotate.Z_AXIS);
-        rotate.setByAngle(360);
-        rotate.setCycleCount(Animation.INDEFINITE);
-        rotate.setDuration(Duration.INDEFINITE);
-        rotate.setAutoReverse(false);
-        rotate.setRate(0.10);
-        rotate.setInterpolator(Interpolator.LINEAR);
-        rotate.setNode(circleObstacle);
-        rotate.play();
+//        circleObstacle = new Group();
+//        circleObstacle.getChildren().addAll(arc1,arc2,arc3,arc4);
+        Rotate rotate = new Rotate(15.0f,posX,posY);
+        //rotate.setAngle(50);
+//        squareObstacle.getTransforms().add(rotate);
+        arc1.getTransforms().add(rotate);
+        arc2.getTransforms().add(rotate);
+        arc3.getTransforms().add(rotate);
+        arc4.getTransforms().add(rotate);
+        rotationTimeline = new Timeline();
+        KeyFrame key1 = new KeyFrame(
+                new javafx.util.Duration(0),
+                new KeyValue(rotate.angleProperty(),0)
+        );
+        KeyFrame key2 =new KeyFrame(
+                new javafx.util.Duration(2800),
+                new KeyValue(rotate.angleProperty(),360)
+        );
+        rotationTimeline.setCycleCount(Animation.INDEFINITE);
+        rotationTimeline.getKeyFrames().addAll(key1,key2);
+        rotationTimeline.playFromStart();
+//        RotateTransition rotate = new RotateTransition();
+//        rotate.setAxis(Rotate.Z_AXIS);
+//        rotate.setByAngle(360);
+//        rotate.setCycleCount(Animation.INDEFINITE);
+//        rotate.setDuration(Duration.INDEFINITE);
+//        rotate.setAutoReverse(false);
+//        rotate.setRate(0.10);
+//        rotate.setInterpolator(Interpolator.LINEAR);
+//        rotate.setNode(circleObstacle);
+//        rotate.play();
 
 
 
@@ -121,8 +131,9 @@ public class CircleObstacle extends Obstacle{
     }
     @Override
     public void moveDown(){
-        //System.out.println("Calling Move down");
-        //circleObstacle.setLayoutY(circleObstacle.getLayoutY() + 20);
+        for(Arc arc:Arcs){
+            arc.setLayoutY(arc.getLayoutY() + 20);
+        }
 
     }
     @Override
@@ -137,30 +148,18 @@ public class CircleObstacle extends Obstacle{
 
     @Override
     public Boolean checkCollision() {
-        Timeline collision = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+        Arcs[0].boundsInParentProperty().addListener((ChangeListener<? super Bounds>) new ChangeListener<Bounds>(){
+
             @Override
-            public void handle(ActionEvent actionEvent) {
-
-                for(Node n:circleObstacle.getChildren()){
-                    Arc arc = (Arc) n;
-                    Shape intersect = Shape.intersect(arc,getGameBall().getBall());
-                    if(intersect.getBoundsInLocal().getWidth() != -1);{
-                        System.out.println("Collision Detected");
+            public void changed(ObservableValue<? extends Bounds> observableValue, Bounds bounds, Bounds t1) {
+                //System.out.println("Changed");
+                for(Arc arc:Arcs){
+                    if(((Path)Shape.intersect(getGameBall().getBall(),arc)).getElements().size() > 0){
+                        System.out.println("Collision With " + arc.getId());
                     }
-//                    if(arc.getId() == "purple") {
-//                        System.out.println(circleObstacle.getLayoutX());
-//                        if (arc.intersects(getGameBall().getBall().getBoundsInParent())) {
-//                            System.out.println("Collision with" + arc.getStroke());
-//                        }
-//                    }
-
-
-
                 }
             }
-        }));
-        collision.setCycleCount(Timeline.INDEFINITE);
-        collision.play();
+        });
         return null;
     }
 }
