@@ -28,20 +28,14 @@ public class Ball {
     private int score = -1;
     private Circle ball;
     //Timeline timeLine;
-    private ArrayList<Obstacle> obstacleArrayList;
+
     double currentY;
 
     public float getVelocity() {
         return velocity;
     }
 
-    public ArrayList<Obstacle> getObstacleArrayList() {
-        return obstacleArrayList;
-    }
 
-    public void setObstacleArrayList(ArrayList<Obstacle> obstacleArrayList) {
-        this.obstacleArrayList = obstacleArrayList;
-    }
 
     public void setVelocity(float velocity) {
         this.velocity = velocity;
@@ -79,8 +73,8 @@ public class Ball {
         this.ball = ball;
     }
 
-    public Ball(Stage primaryStage, Group root, Scene gameplayScene, ImageView imageView, ArrayList<Obstacle> obstacleArrayList){
-            this.obstacleArrayList = obstacleArrayList;
+    public Ball(Group root, Scene gameplayScene, ImageView imageView){
+
             Color purpleColor = Color.rgb(141,20,249);
             Color yellowColor = Color.rgb(245,224,13);
             Color cyanColor = Color.rgb(54,225,243);
@@ -89,6 +83,7 @@ public class Ball {
             ball.setLayoutX(posX);
             ball.setLayoutY(posY);
             ball.setFill(magentaColor);
+            ball.setId("magenta");
             root.getChildren().add(ball);
 
             gameplayScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
@@ -104,17 +99,17 @@ public class Ball {
                     }
                 }
             });
-            calculatePosition(primaryStage);
+            calculatePosition();
 
 
     }
 
 
 
-    public int calculatePosition(Stage primaryStage){
+    public int calculatePosition(){
         currentY = ball.getLayoutY();
        // System.out.println("CurrenY:"+currentY);
-        Timeline updateCurrY = new Timeline(new KeyFrame(Duration.millis(1000), new EventHandler<ActionEvent>() {
+        Timeline updateCurrY = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 currentY = ball.getLayoutY();

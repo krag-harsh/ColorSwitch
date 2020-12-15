@@ -17,7 +17,7 @@ import java.security.Key;
 
 public class CircleObstacle extends Obstacle{
     Group circleObstacle;
-    Arc Arcs[];
+    Arc Components[];
     public CircleObstacle(int posX, int posY, Object Orientation, Ball gameBall){
         Color purpleColor = Color.rgb(141,20,249);
         Color yellowColor = Color.rgb(245,224,13);
@@ -79,11 +79,11 @@ public class CircleObstacle extends Obstacle{
         arc4.setType(ArcType.OPEN);
         arc4.setId("magenta");
 
-        Arcs = new Arc[4];
-        Arcs[0] = arc1;
-        Arcs[1] = arc2;
-        Arcs[2] = arc3;
-        Arcs[3] = arc4;
+        Components = new Arc[4];
+        Components[0] = arc1;
+        Components[1] = arc2;
+        Components[2] = arc3;
+        Components[3] = arc4;
 //        arc1.setLayoutX(posX);
 //        arc1.setLayoutY(posY);
 //        arc2.setLayoutX(posX);
@@ -93,8 +93,8 @@ public class CircleObstacle extends Obstacle{
 //        arc4.setLayoutX(posX);
 //        arc4.setLayoutY(posY);
 
-//        circleObstacle = new Group();
-//        circleObstacle.getChildren().addAll(arc1,arc2,arc3,arc4);
+        parts = new Group();
+        parts.getChildren().addAll(arc1,arc2,arc3,arc4);
         Rotate rotate = new Rotate(15.0f,posX,posY);
         //rotate.setAngle(50);
 //        squareObstacle.getTransforms().add(rotate);
@@ -131,8 +131,8 @@ public class CircleObstacle extends Obstacle{
     }
     @Override
     public void moveDown(){
-        for(Arc arc:Arcs){
-            arc.setLayoutY(arc.getLayoutY() + 20);
+        for(Arc arc:Components){
+            arc.setLayoutY(arc.getLayoutY() + this.downValue);
         }
 
     }
@@ -148,14 +148,17 @@ public class CircleObstacle extends Obstacle{
 
     @Override
     public Boolean checkCollision() {
-        Arcs[0].boundsInParentProperty().addListener((ChangeListener<? super Bounds>) new ChangeListener<Bounds>(){
+        Components[0].boundsInParentProperty().addListener((ChangeListener<? super Bounds>) new ChangeListener<Bounds>(){
 
             @Override
             public void changed(ObservableValue<? extends Bounds> observableValue, Bounds bounds, Bounds t1) {
                 //System.out.println("Changed");
-                for(Arc arc:Arcs){
+                for(Arc arc:Components){
                     if(((Path)Shape.intersect(getGameBall().getBall(),arc)).getElements().size() > 0){
-                        System.out.println("Collision With " + arc.getId());
+                        //System.out.println("Collision With " + arc.getId());
+                        if(!getGameBall().getBall().getId().equals(arc.getId())){
+                            System.out.println("Dead");
+                        }
                     }
                 }
             }

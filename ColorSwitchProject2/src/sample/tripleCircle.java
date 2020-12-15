@@ -17,7 +17,7 @@ import java.security.Key;
 
 public class tripleCircle extends Obstacle{
     Group tripleCircleObstacle;
-    Arc Arcs[];
+    Arc Components[];
     public tripleCircle(int posX,int posY,Object Orientation,Ball gameBall){
         Color purpleColor = Color.rgb(141,20,249);
         Color yellowColor = Color.rgb(245,224,13);
@@ -185,24 +185,24 @@ public class tripleCircle extends Obstacle{
         arc4b.setFill(Color.TRANSPARENT);
         arc4b.setType(ArcType.OPEN);
 
-        Arcs = new Arc[12];
-        Arcs[0] = arc1;
-        Arcs[1] = arc1a;
-        Arcs[2] = arc2;
-        Arcs[3] = arc2a;
-        Arcs[4] = arc3;
-        Arcs[5] = arc3a;
-        Arcs[6] = arc4;
-        Arcs[7] = arc4a;
-        Arcs[8] = arc1b;
-        Arcs[9] = arc2b;
-        Arcs[10] = arc3b;
-        Arcs[11] = arc4b;
+        Components = new Arc[12];
+        Components[0] = arc1;
+        Components[1] = arc1a;
+        Components[2] = arc2;
+        Components[3] = arc2a;
+        Components[4] = arc3;
+        Components[5] = arc3a;
+        Components[6] = arc4;
+        Components[7] = arc4a;
+        Components[8] = arc1b;
+        Components[9] = arc2b;
+        Components[10] = arc3b;
+        Components[11] = arc4b;
 
 
 
-//        tripleCircleObstacle = new Group();
-//        tripleCircleObstacle.getChildren().addAll(arc1,arc1a,arc2,arc2a,arc3,arc3a,arc4,arc4a,arc1b,arc2b,arc3b,arc4b);
+         parts= new Group();
+         parts.getChildren().addAll(arc1,arc1a,arc2,arc2a,arc3,arc3a,arc4,arc4a,arc1b,arc2b,arc3b,arc4b);
 //        Rotate rotate = new Rotate(5,posX,posY);
 //        //rotate.setAngle(50);
 //        circleObstacle.getTransforms().add(rotate);
@@ -250,8 +250,8 @@ public class tripleCircle extends Obstacle{
     @Override
     public void moveDown(){
         //System.out.println("Calling Move down");
-        for(Arc arc:Arcs){
-            arc.setLayoutY(arc.getLayoutY() + 20);
+        for(Arc arc:Components){
+            arc.setLayoutY(arc.getLayoutY() + this.downValue);
         }
 
     }
@@ -267,14 +267,17 @@ public class tripleCircle extends Obstacle{
 
     @Override
     public Boolean checkCollision() {
-        Arcs[0].boundsInParentProperty().addListener((ChangeListener<? super Bounds>) new ChangeListener<Bounds>(){
+        Components[0].boundsInParentProperty().addListener((ChangeListener<? super Bounds>) new ChangeListener<Bounds>(){
 
             @Override
             public void changed(ObservableValue<? extends Bounds> observableValue, Bounds bounds, Bounds t1) {
                 //System.out.println("Changed");
-                for(Arc arc:Arcs){
+                for(Arc arc:Components){
                     if(((Path) Shape.intersect(getGameBall().getBall(),arc)).getElements().size() > 0){
-                        System.out.println("Collision With " + arc.getId());
+                        //System.out.println("Collision With " + arc.getId());
+                        if(!getGameBall().getBall().getId().equals(arc.getId())){
+                            System.out.println("Dead");
+                        }
                     }
                 }
             }

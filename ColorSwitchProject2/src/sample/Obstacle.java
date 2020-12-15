@@ -1,12 +1,16 @@
 package sample;
 
 import javafx.animation.*;
+import javafx.scene.Group;
+
 public abstract class Obstacle {
     private int posX;
     private int posY;
     private Object Orientation;
     private Ball gameBall;
     public Timeline rotationTimeline;
+    public Group parts;
+    protected int downValue = 20;
     public abstract void moveDown();
     public int getPosX() {
         return posX;
@@ -35,6 +39,10 @@ public abstract class Obstacle {
     public Ball getGameBall() {
         return gameBall;
     }
+
+    public Group getComponents(){
+        return parts;
+    };
 
     public void setGameBall(Ball gameBall) {
         this.gameBall = gameBall;

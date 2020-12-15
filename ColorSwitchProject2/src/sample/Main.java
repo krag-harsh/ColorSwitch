@@ -25,11 +25,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 public class Main extends Application {
-    public static ArrayList<ImageView> Stars = new ArrayList<>();
+    public static ImageView star;
     public static Timeline timeLine;
     public static ArrayList<Obstacle> obstacleArrayList;
+    public static Obstacle current;
+    public static Obstacle next;
     @Override
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
@@ -162,12 +165,13 @@ public class Main extends Application {
         imageView.setPreserveRatio(true);
         root.getChildren().add(imageView);
 
-        Ball gameBall = new Ball(primaryStage,root,gamePlayScene,imageView,obstacleArrayList);
-        startTimeline(gameBall,primaryStage);
+        Ball gameBall = new Ball(root,gamePlayScene,imageView);
+        startTimeline(gameBall,primaryStage,root);
 //
 //        CircleObstacle obstacle1 = new CircleObstacle(225,200, null,gameBall);
 //        doubleCircle obstacle2 = new doubleCircle(225,200,null,gameBall);
-          tripleCircle obstacle3 = new tripleCircle(225,200,null,gameBall);
+         current = new CircleObstacle(225,200,null,gameBall);
+         next = null;
 //          Plus obstacle4 = new Plus(225,200,null,gameBall);
 //        Square obstacle5 = new Square(225,200,null,gameBall);
 //          Rhombus obstacle6 = new Rhombus(225,200,null,gameBall);
@@ -177,19 +181,19 @@ public class Main extends Application {
 //        obstacleArrayList.add(obstacle1);
 //        obstacleArrayList.add(obstacle4);
 //        obstacleArrayList.add(obstacle3);
-        root.getChildren().addAll(obstacle3.Arcs);
-        obstacleArrayList.add(obstacle3);
+        root.getChildren().addAll(current.getComponents());
+        obstacleArrayList.add(current);
 
         //Adding Star
-        Image star = new Image(new FileInputStream("library/star.jpeg"));
-        ImageView imageViewStar1 = new ImageView(star);
-        imageViewStar1.setLayoutX(205);
-        imageViewStar1.setLayoutY(obstacle3.getPosY() - 20);
-        imageViewStar1.setFitHeight(40);
-        imageViewStar1.setFitWidth(40);
-        imageViewStar1.setPreserveRatio(true);
-        root.getChildren().add(imageViewStar1);
-        Stars.add(imageViewStar1);
+        Image starImage = new Image(new FileInputStream("library/star.jpeg"));
+        star = new ImageView(starImage);
+        star.setLayoutX(205);
+        star.setLayoutY(current.getPosY() - 20);
+        star.setFitHeight(40);
+        star.setFitWidth(40);
+        star.setPreserveRatio(true);
+        root.getChildren().add(star);
+
         //Adding PauseGame Button;
         Button pauseButton = new Button();
         pauseButton.setText("PauseGame");
@@ -394,9 +398,7 @@ public class Main extends Application {
         primaryStage.show();
     }
     public static void moveStars(){
-        for(ImageView star:Stars){
-            star.setLayoutY(star.getLayoutY() + 20);
-        }
+        star.setLayoutY(star.getLayoutY() + 20);
     }
     public static void savedStateScene(Stage primaryStage){
         primaryStage.setTitle("Saved State Screen");
@@ -414,7 +416,7 @@ public class Main extends Application {
         primaryStage.setScene(savedStateScene);
         primaryStage.show();
     }
-    public static void startTimeline(Ball gameBall,Stage primaryStage){
+    public static void startTimeline(Ball gameBall,Stage primaryStage,Group gamePlayRoot){
         timeLine = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler <ActionEvent>() {
 
 
@@ -424,23 +426,38 @@ public class Main extends Application {
             public void handle(ActionEvent t) {
                 //move the ball
                 //System.out.println("InCurrentY:" + ball.getLayoutY());
-                Iterator<ImageView> starIterator = Stars.iterator();
-                while(starIterator.hasNext()){
-                    ImageView star = starIterator.next();
-                    //System.out.println("Star" + (star.getLayoutY() + 20));
-                    //System.out.println("Ball" + gameBall.getBall().getLayoutY());
-                    if((star.getLayoutY() + 40) >= gameBall.getBall().getLayoutY()){
-                        star.setVisible(false);
-                        starIterator.remove();
-                       // primaryStage.getScene().getRoot().getChildren().remove(star);
-                       gameBall.setScore(gameBall.getScore() + 1);
-                       System.out.println("Score" + gameBall.getScore());
-                        //System.out.println("Test");
-                    }
+//                Iterator<ImageView> starIterator = Stars.iterator();
+//                while(starIterator.hasNext()){
+//                    ImageView star = starIterator.next();
+//                    //System.out.println("Star" + (star.getLayoutY() + 20));
+//                    //System.out.println("Ball" + gameBall.getBall().getLayoutY());
+//                    if((star.getLayoutY() + 40) >= gameBall.getBall().getLayoutY()){
+//                        star.setVisible(false);
+//                        starIterator.remove();
+//                       // primaryStage.getScene().getRoot().getChildren().remove(star);
+//                       gameBall.setScore(gameBall.getScore() + 1);
+//                       System.out.println("Score" + gameBall.getScore());
+//                        //System.out.println("Test");
+//                    }
+//                }
+                if((star.getLayoutY() + 40) >= gameBall.getBall().getLayoutY()){
+                    star.setLayoutY(current.getPosY()-270);
+                    System.out.println("PosY" + current.getPosY());
+
+                    // primaryStage.getScene().getRoot().getChildren().remove(star);
+                    gameBall.setScore(gameBall.getScore() + 1);
+                    System.out.println("Score" + gameBall.getScore());
+                    next = spawnNextObstacle(gameBall);
+                    obstacleArrayList.add(next);
+                    gamePlayRoot.getChildren().add(next.getComponents());
+                    current = next;
+                    next = null;
+
+                    //System.out.println("Test");
                 }
-                if(gameBall.getBall().getLayoutY() <= gameBall.getCurrentY()-40){
+                if(gameBall.getBall().getLayoutY() <= gameBall.getCurrentY()-20){
                     //System.out.println("Into If");
-                    for(Obstacle ob:gameBall.getObstacleArrayList()){
+                    for(Obstacle ob:obstacleArrayList){
                         ob.moveDown();
                     }
                     Main.moveStars();
@@ -459,6 +476,23 @@ public class Main extends Application {
             }
         }));
         timeLine.setCycleCount(Timeline.INDEFINITE);
+
+    }
+
+
+    public static Obstacle spawnNextObstacle(Ball gameBall){
+        Random rand = new Random();
+        int upperbound = 6;
+        int number = rand.nextInt(upperbound);
+        return switch (number) {
+            case 0 -> new CircleObstacle(225, current.getPosY()-250, null, gameBall);
+            case 1 -> new doubleCircle(225, current.getPosY()-250, null, gameBall);
+            case 2 -> new tripleCircle(225, current.getPosY()-250, null, gameBall);
+            case 3 -> new Square(225, current.getPosY()-250, null, gameBall);
+            case 4 -> new Plus(225, current.getPosY()-250, null, gameBall);
+            case 5 -> new Rhombus(225, current.getPosY()-250, null, gameBall);
+            default -> null;
+        };
 
     }
 }

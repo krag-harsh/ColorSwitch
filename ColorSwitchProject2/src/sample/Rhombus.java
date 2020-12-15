@@ -14,7 +14,7 @@ import javafx.util.Duration;
 
 public class Rhombus extends Obstacle{
     Group rhombusObstacle;
-    Line Lines[];
+    Line Components[];
     public Rhombus(int posX, int posY, Object Orientation, Ball gameBall){
         Color purpleColor = Color.rgb(141,20,249);
         Color yellowColor = Color.rgb(245,224,13);
@@ -61,14 +61,14 @@ public class Rhombus extends Obstacle{
         line4.setStartX(posX + 120);
         line4.setEndX(posX - 60);
 
-        Lines = new Line[4];
-        Lines[0] = line1;
-        Lines[1] = line2;
-        Lines[2] = line3;
-        Lines[3] = line4;
+        Components = new Line[4];
+        Components[0] = line1;
+        Components[1] = line2;
+        Components[2] = line3;
+        Components[3] = line4;
 
-//        rhombusObstacle = new Group();
-//        rhombusObstacle.getChildren().addAll(line1,line2,line3,line4);
+        parts = new Group();
+        parts.getChildren().addAll(line1,line2,line3,line4);
 //        Rotate rotate = new Rotate(5,posX,posY);
 //        //rotate.setAngle(50);
 //        circleObstacle.getTransforms().add(rotate);
@@ -109,8 +109,8 @@ public class Rhombus extends Obstacle{
     @Override
     public void moveDown(){
         //System.out.println("Calling Move down");
-        for(Line line:Lines){
-            line.setLayoutY(line.getLayoutY() + 20);
+        for(Line line:Components){
+            line.setLayoutY(line.getLayoutY() + this.downValue);
         }
 
     }
@@ -127,14 +127,17 @@ public class Rhombus extends Obstacle{
     @Override
     public Boolean checkCollision() {
 
-        Lines[0].boundsInParentProperty().addListener((ChangeListener<? super Bounds>) new ChangeListener<Bounds>(){
+        Components[0].boundsInParentProperty().addListener((ChangeListener<? super Bounds>) new ChangeListener<Bounds>(){
 
             @Override
             public void changed(ObservableValue<? extends Bounds> observableValue, Bounds bounds, Bounds t1) {
                 //System.out.println("Changed");
-                for(Line line:Lines){
+                for(Line line:Components){
                     if(((Path) Shape.intersect(getGameBall().getBall(),line)).getElements().size() > 0){
-                        System.out.println("Collision With " + line.getId());
+                        //System.out.println("Collision With " + line.getId());
+                        if(!getGameBall().getBall().getId().equals(line.getId())){
+                            System.out.println("Dead");
+                        }
                     }
                 }
             }
