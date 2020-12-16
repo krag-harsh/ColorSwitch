@@ -6,6 +6,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
@@ -107,6 +108,10 @@ public class Rhombus extends Obstacle{
         checkCollision();
     }
     @Override
+    public int getY(){
+        return (int)(((Line)this.getComponents().getChildren().get(0)).getLayoutY()-250);
+    }
+    @Override
     public void moveDown(){
         //System.out.println("Calling Move down");
         for(Line line:Components){
@@ -136,7 +141,7 @@ public class Rhombus extends Obstacle{
                     if(((Path) Shape.intersect(getGameBall().getBall(),line)).getElements().size() > 0){
                         //System.out.println("Collision With " + line.getId());
                         if(!getGameBall().getBall().getId().equals(line.getId())){
-                            System.out.println("Dead");
+                            //System.out.println("Dead");
                         }
                     }
                 }

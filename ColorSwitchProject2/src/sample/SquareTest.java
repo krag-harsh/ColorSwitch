@@ -100,6 +100,10 @@ public class SquareTest extends Obstacle{
         checkCollision();
     }
     @Override
+    public int getY(){
+        return 0;
+    }
+    @Override
     public void moveDown(){
         //System.out.println("Calling Move down");
         //squareObstacle.setLayoutY(squareObstacle.getLayoutY() + 20);

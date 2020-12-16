@@ -10,7 +10,7 @@ public abstract class Obstacle {
     private Ball gameBall;
     public Timeline rotationTimeline;
     public Group parts;
-    protected int downValue = 20;
+    protected int downValue = 2;
     public abstract void moveDown();
     public int getPosX() {
         return posX;
@@ -58,4 +58,5 @@ public abstract class Obstacle {
     public abstract Object getPosition();
     public abstract Object getNewOrientation();
     public abstract Boolean checkCollision();
+    public abstract int getY();
 }

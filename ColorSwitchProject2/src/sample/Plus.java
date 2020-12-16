@@ -102,6 +102,10 @@ public class Plus extends Obstacle{
 //        rotate.play();
     }
     @Override
+    public int getY(){
+        return (int)(((Line)this.getComponents().getChildren().get(0)).getLayoutY()-250);
+    }
+    @Override
     public void moveDown(){
         //System.out.println("Calling Move down");
         for(Line line:Components){
@@ -131,7 +135,7 @@ public class Plus extends Obstacle{
                     if(((Path) Shape.intersect(getGameBall().getBall(),line)).getElements().size() > 0){
                         //System.out.println("Collision With " + line.getId());
                         if(!getGameBall().getBall().getId().equals(line.getId())){
-                            System.out.println("Dead");
+                            //System.out.println("Dead");
                         }
                     }
                 }

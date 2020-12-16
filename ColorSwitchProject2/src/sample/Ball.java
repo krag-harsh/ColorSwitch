@@ -109,7 +109,7 @@ public class Ball {
     public int calculatePosition(){
         currentY = ball.getLayoutY();
        // System.out.println("CurrenY:"+currentY);
-        Timeline updateCurrY = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
+        Timeline updateCurrY = new Timeline(new KeyFrame(Duration.millis(200), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 currentY = ball.getLayoutY();

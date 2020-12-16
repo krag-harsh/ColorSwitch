@@ -14,6 +14,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -33,6 +35,7 @@ public class Main extends Application {
     public static ArrayList<Obstacle> obstacleArrayList;
     public static Obstacle current;
     public static Obstacle next;
+    public static Text score;
     @Override
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
@@ -148,7 +151,7 @@ public class Main extends Application {
         Color backgroundColor = Color.rgb(41,41,41);
         gamePlayScene.setFill(backgroundColor);
         //Adding Score Label
-        Text score = new Text("Score:0");
+        score = new Text("Score:0");
         score.setFont(Font.font("WHITE", FontWeight.BOLD, FontPosture.REGULAR,20));
         score.setFill(Color.WHITE);
         score.setLayoutX(10);
@@ -398,7 +401,7 @@ public class Main extends Application {
         primaryStage.show();
     }
     public static void moveStars(){
-        star.setLayoutY(star.getLayoutY() + 20);
+        star.setLayoutY(star.getLayoutY() + 2);
     }
     public static void savedStateScene(Stage primaryStage){
         primaryStage.setTitle("Saved State Screen");
@@ -441,21 +444,27 @@ public class Main extends Application {
 //                    }
 //                }
                 if((star.getLayoutY() + 40) >= gameBall.getBall().getLayoutY()){
-                    star.setLayoutY(current.getPosY()-270);
-                    System.out.println("PosY" + current.getPosY());
 
-                    // primaryStage.getScene().getRoot().getChildren().remove(star);
                     gameBall.setScore(gameBall.getScore() + 1);
-                    System.out.println("Score" + gameBall.getScore());
+                    //System.out.println("Score" + gameBall.getScore());
+                    score.setText("Score:" + gameBall.getScore());
                     next = spawnNextObstacle(gameBall);
                     obstacleArrayList.add(next);
                     gamePlayRoot.getChildren().add(next.getComponents());
+                    System.out.println("Before Current" + current.getClass().getName());
                     current = next;
                     next = null;
+                    System.out.println("After Current" + current.getClass().getName());
+
+                    star.setLayoutY(star.getLayoutY()-470);
+                    //System.out.println("PosY" + current.getY());
+
+                    // primaryStage.getScene().getRoot().getChildren().remove(star);
+
 
                     //System.out.println("Test");
                 }
-                if(gameBall.getBall().getLayoutY() <= gameBall.getCurrentY()-20){
+                if(gameBall.getBall().getLayoutY() <= 400){
                     //System.out.println("Into If");
                     for(Obstacle ob:obstacleArrayList){
                         ob.moveDown();
@@ -485,12 +494,12 @@ public class Main extends Application {
         int upperbound = 6;
         int number = rand.nextInt(upperbound);
         return switch (number) {
-            case 0 -> new CircleObstacle(225, current.getPosY()-250, null, gameBall);
-            case 1 -> new doubleCircle(225, current.getPosY()-250, null, gameBall);
-            case 2 -> new tripleCircle(225, current.getPosY()-250, null, gameBall);
-            case 3 -> new Square(225, current.getPosY()-250, null, gameBall);
-            case 4 -> new Plus(225, current.getPosY()-250, null, gameBall);
-            case 5 -> new Rhombus(225, current.getPosY()-250, null, gameBall);
+            case 0 -> new CircleObstacle(225, (int)(star.getLayoutY()-450), null, gameBall);
+            case 1 -> new doubleCircle(225,(int)(star.getLayoutY()-450), null, gameBall);
+            case 2 -> new tripleCircle(225,(int)(star.getLayoutY()-450), null, gameBall);
+            case 3 -> new Square(225, (int)(star.getLayoutY()-450),null, gameBall);
+            case 4 -> new Plus(225,(int)(star.getLayoutY()-450), null, gameBall);
+            case 5 -> new Rhombus(225,(int)(star.getLayoutY()-450), null, gameBall);
             default -> null;
         };
 

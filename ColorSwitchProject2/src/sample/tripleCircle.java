@@ -6,10 +6,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -264,6 +261,10 @@ public class tripleCircle extends Obstacle{
     public Object getNewOrientation() {
         return null;
     }
+    @Override
+    public int getY(){
+        return (int)(((Arc)this.getComponents().getChildren().get(0)).getLayoutY()-250);
+    }
 
     @Override
     public Boolean checkCollision() {
@@ -276,7 +277,7 @@ public class tripleCircle extends Obstacle{
                     if(((Path) Shape.intersect(getGameBall().getBall(),arc)).getElements().size() > 0){
                         //System.out.println("Collision With " + arc.getId());
                         if(!getGameBall().getBall().getId().equals(arc.getId())){
-                            System.out.println("Dead");
+                            //System.out.println("Dead");
                         }
                     }
                 }

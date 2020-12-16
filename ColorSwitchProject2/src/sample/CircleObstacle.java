@@ -17,7 +17,7 @@ import java.security.Key;
 
 public class CircleObstacle extends Obstacle{
     Group circleObstacle;
-    Arc Components[];
+    public Arc Components[];
     public CircleObstacle(int posX, int posY, Object Orientation, Ball gameBall){
         Color purpleColor = Color.rgb(141,20,249);
         Color yellowColor = Color.rgb(245,224,13);
@@ -137,6 +137,10 @@ public class CircleObstacle extends Obstacle{
 
     }
     @Override
+    public int getY(){
+        return (int)(((Arc)this.getComponents().getChildren().get(0)).getLayoutY()-250);
+    }
+    @Override
     public Object getPosition() {
         return null;
     }
@@ -157,7 +161,7 @@ public class CircleObstacle extends Obstacle{
                     if(((Path)Shape.intersect(getGameBall().getBall(),arc)).getElements().size() > 0){
                         //System.out.println("Collision With " + arc.getId());
                         if(!getGameBall().getBall().getId().equals(arc.getId())){
-                            System.out.println("Dead");
+                            //System.out.println("Dead");
                         }
                     }
                 }
