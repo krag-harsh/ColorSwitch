@@ -9,12 +9,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
-import java.security.Key;
 
 public class tripleCircle extends Obstacle{
-    Group tripleCircleObstacle;
+
     Arc Components[];
     Stage primaryStage;
     public tripleCircle(int posX,int posY,Object Orientation,Ball gameBall,Stage primaryStage){
@@ -205,12 +203,9 @@ public class tripleCircle extends Obstacle{
 
          parts= new Group();
          parts.getChildren().addAll(arc1,arc1a,arc2,arc2a,arc3,arc3a,arc4,arc4a,arc1b,arc2b,arc3b,arc4b);
-//        Rotate rotate = new Rotate(5,posX,posY);
-//        //rotate.setAngle(50);
-//        circleObstacle.getTransforms().add(rotate);
+
         rotate = new Rotate(15.0f,posX,posY);
-        //rotate.setAngle(50);
-//        squareObstacle.getTransforms().add(rotate);
+
         arc1.getTransforms().add(rotate);
         arc2.getTransforms().add(rotate);
         arc3.getTransforms().add(rotate);
@@ -238,24 +233,16 @@ public class tripleCircle extends Obstacle{
         rotationTimeline.playFromStart();
 
         checkCollision();
-//        RotateTransition rotate = new RotateTransition();
-//        rotate.setAxis(Rotate.Z_AXIS);
-//        rotate.setByAngle(360);
-//        rotate.setCycleCount(Animation.INDEFINITE);
-//        rotate.setDuration(Duration.INDEFINITE);
-//        rotate.setAutoReverse(false);
-//        rotate.setRate(0.10);
-//        rotate.setInterpolator(Interpolator.LINEAR);
-//        rotate.setNode(tripleCircleObstacle);
-//        rotate.play();
+
     }
     @Override
     public void moveDown(){
-        //System.out.println("Calling Move down");
+
         setPosY(getPosY() + Obstacle.downValue);
         rotate.setPivotY(getPosY());
         for(Arc arc:Components){
             arc.setCenterY(arc.getCenterY() + Obstacle.downValue);
+            //arc.setLayoutY(arc.getLayoutY() + Obstacle.downValue);
 
         }
 
@@ -276,10 +263,10 @@ public class tripleCircle extends Obstacle{
 
             @Override
             public void changed(ObservableValue<? extends Bounds> observableValue, Bounds bounds, Bounds t1) {
-                //System.out.println("Changed");
+
                 for(Arc arc:Components){
                     if(((Path) Shape.intersect(getGameBall().getBall(),arc)).getElements().size() > 0){
-                        //System.out.println("Collision With " + arc.getId());
+
                         if(!getGameBall().getBall().getId().equals(arc.getId())){
                             //System.out.println("Dead");
 

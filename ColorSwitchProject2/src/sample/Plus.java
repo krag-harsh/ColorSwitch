@@ -9,9 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
-import java.security.Key;
 
 public class Plus extends Obstacle{
     Group plusObstacle;
@@ -74,8 +72,7 @@ public class Plus extends Obstacle{
         parts = new Group();
         parts.getChildren().addAll(line1,line2,line3,line4);
         rotate = new Rotate(15.0f,getPosX(),posY);
-        //rotate.setAngle(50);
-//        squareObstacle.getTransforms().add(rotate);
+
         line1.getTransforms().add(rotate);
         line2.getTransforms().add(rotate);
         line3.getTransforms().add(rotate);
@@ -94,26 +91,18 @@ public class Plus extends Obstacle{
         rotationTimeline.playFromStart();
 
         checkCollision();
-//        RotateTransition rotate = new RotateTransition();
-//        rotate.setAxis(Rotate.Z_AXIS);
-//        rotate.setByAngle(360);
-//        rotate.setCycleCount(Animation.INDEFINITE);
-//        rotate.setDuration(Duration.INDEFINITE);
-//        rotate.setAutoReverse(false);
-//        rotate.setRate(0.10);
-//        rotate.setInterpolator(Interpolator.LINEAR);
-//        rotate.setNode(plusObstacle);
-//        rotate.play();
+
     }
     @Override
     public void moveDown(){
-        //System.out.println("Calling Move down");
+
         setPosY(getPosY() + Obstacle.downValue);
         rotate.setPivotY(getPosY());
         for(Line line:Components){
             line.setStartY(line.getStartY() + Obstacle.downValue);
             line.setEndY(line.getEndY() + Obstacle.downValue);
-            //line.setLayoutY(line.getLayoutY() + this.downValue);
+            //line.setLayoutY(line.getLayoutY() + Obstacle.downValue);
+
         }
 
 
@@ -134,10 +123,10 @@ public class Plus extends Obstacle{
 
             @Override
             public void changed(ObservableValue<? extends Bounds> observableValue, Bounds bounds, Bounds t1) {
-                //System.out.println("Changed");
+
                 for(Line line:Components){
                     if(((Path) Shape.intersect(getGameBall().getBall(),line)).getElements().size() > 0){
-                        //System.out.println("Collision With " + line.getId());
+
                         if(!getGameBall().getBall().getId().equals(line.getId())){
                             //System.out.println("Dead");
                             Main.endgameScreen(primaryStage);

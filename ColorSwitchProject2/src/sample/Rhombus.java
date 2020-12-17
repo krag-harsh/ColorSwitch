@@ -6,16 +6,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
+
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+
 
 public class Rhombus extends Obstacle{
-    Group rhombusObstacle;
     Line Components[];
     Stage primaryStage;
     public Rhombus(int posX, int posY, Object Orientation, Ball gameBall,Stage primaryStage){
@@ -74,24 +73,9 @@ public class Rhombus extends Obstacle{
 
         parts = new Group();
         parts.getChildren().addAll(line1,line2,line3,line4);
-//        Rotate rotate = new Rotate(5,posX,posY);
-//        //rotate.setAngle(50);
-//        circleObstacle.getTransforms().add(rotate);
-//        Timeline timeline = new Timeline();
-////        KeyFrame key1 = new KeyFrame(
-////                new javafx.util.Duration(0),
-////                new KeyValue(rotate.angleProperty(),0)
-////        );
-//        KeyFrame key2 =new KeyFrame(
-//                new javafx.util.Duration(2500),
-//                new KeyValue(rotate.angleProperty(),360)
-//        );
-//        timeline.setCycleCount(Animation.INDEFINITE);
-//        timeline.getKeyFrames().addAll(key2);
-//        timeline.playFromStart();
+
         rotate = new Rotate(15.0f,posX,posY);
-        //rotate.setAngle(50);
-//        squareObstacle.getTransforms().add(rotate);
+
         line1.getTransforms().add(rotate);
         line2.getTransforms().add(rotate);
         line3.getTransforms().add(rotate);
@@ -113,13 +97,14 @@ public class Rhombus extends Obstacle{
     }
     @Override
     public void moveDown(){
-        //System.out.println("Calling Move down");
+
         setPosY(getPosY() + Obstacle.downValue);
         rotate.setPivotY(getPosY());
         for(Line line:Components){
             line.setStartY(line.getStartY() + Obstacle.downValue);
             line.setEndY(line.getEndY() + Obstacle.downValue);
-            //line.setLayoutY(line.getLayoutY() + this.downValue);
+            //line.setLayoutY(line.getLayoutY() + Obstacle.downValue);
+
         }
 
     }
@@ -140,10 +125,10 @@ public class Rhombus extends Obstacle{
 
             @Override
             public void changed(ObservableValue<? extends Bounds> observableValue, Bounds bounds, Bounds t1) {
-                //System.out.println("Changed");
+
                 for(Line line:Components){
                     if(((Path) Shape.intersect(getGameBall().getBall(),line)).getElements().size() > 0){
-                        //System.out.println("Collision With " + line.getId());
+
                         if(!getGameBall().getBall().getId().equals(line.getId())){
                             //System.out.println("Dead");
                             Main.endgameScreen(primaryStage);

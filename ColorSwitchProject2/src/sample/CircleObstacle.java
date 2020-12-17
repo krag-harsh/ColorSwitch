@@ -3,22 +3,18 @@ package sample;
 import javafx.animation.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.Node;
+
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
-import java.security.Key;
-import java.util.concurrent.TimeUnit;
 
 public class CircleObstacle extends Obstacle{
-    Group circleObstacle;
+
     public Arc Components[];
     Stage primaryStage;
     Rotate rotate;
@@ -91,20 +87,12 @@ public class CircleObstacle extends Obstacle{
         Components[1] = arc2;
         Components[2] = arc3;
         Components[3] = arc4;
-//        arc1.setLayoutX(posX);
-//        arc1.setLayoutY(posY);
-//        arc2.setLayoutX(posX);
-//        arc2.setLayoutY(posY);
-//        arc3.setLayoutX(posX);
-//        arc3.setLayoutY(posY);
-//        arc4.setLayoutX(posX);
-//        arc4.setLayoutY(posY);
+
 
         parts = new Group();
         parts.getChildren().addAll(arc1,arc2,arc3,arc4);
         rotate = new Rotate(15.0f,posX,posY);
-        //rotate.setAngle(50);
-//        squareObstacle.getTransforms().add(rotate);
+
         arc1.getTransforms().add(rotate);
         arc2.getTransforms().add(rotate);
         arc3.getTransforms().add(rotate);
@@ -121,16 +109,7 @@ public class CircleObstacle extends Obstacle{
         rotationTimeline.setCycleCount(Animation.INDEFINITE);
         rotationTimeline.getKeyFrames().addAll(key1,key2);
         rotationTimeline.playFromStart();
-//        RotateTransition rotate = new RotateTransition();
-//        rotate.setAxis(Rotate.Z_AXIS);
-//        rotate.setByAngle(360);
-//        rotate.setCycleCount(Animation.INDEFINITE);
-//        rotate.setDuration(Duration.INDEFINITE);
-//        rotate.setAutoReverse(false);
-//        rotate.setRate(0.10);
-//        rotate.setInterpolator(Interpolator.LINEAR);
-//        rotate.setNode(circleObstacle);
-//        rotate.play();
+
 
 
 
@@ -142,8 +121,8 @@ public class CircleObstacle extends Obstacle{
         rotate.setPivotY(getPosY());
         for(Arc arc:Components){
             arc.setCenterY(arc.getCenterY() + this.downValue);
-            //arc.setLayoutY(arc.getLayoutY() + this.downValue);
-            //System.out.println("Arc LayoutY" + arc.getLayoutY());
+            //arc.setLayoutY(arc.getLayoutY() + Obstacle.downValue);
+
         }
 
     }
@@ -163,17 +142,12 @@ public class CircleObstacle extends Obstacle{
 
             @Override
             public void changed(ObservableValue<? extends Bounds> observableValue, Bounds bounds, Bounds t1) {
-                //System.out.println("Changed");
+
                 for(Arc arc:Components){
                     if(((Path)Shape.intersect(getGameBall().getBall(),arc)).getElements().size() > 0){
-                        //System.out.println("Collision With " + arc.getId());
+
                         if(!getGameBall().getBall().getId().equals(arc.getId())){
-                            //System.out.println("Dead");
-//                            try {
-//                                TimeUnit.MILLISECONDS.sleep(500);
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
+
 
                             Main.endgameScreen(primaryStage);
                         }

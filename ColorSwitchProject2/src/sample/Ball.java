@@ -1,29 +1,30 @@
 package sample;
 
-import com.sun.prism.PhongMaterial;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
+
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
+
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Sphere;
-import javafx.stage.Stage;
+
 import javafx.util.Duration;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
+
 
 class ballSerialize implements Serializable{
     int posY;
@@ -50,9 +51,9 @@ public class Ball {
     public static Color yellowColor = Color.rgb(245,224,13);
     public static Color cyanColor = Color.rgb(54,225,243);
     public static Color magentaColor = Color.rgb(255,0,128);
-    //Timeline timeLine;
 
-    double currentY;
+
+    public double currentY;
 
     public float getVelocity() {
         return velocity;
@@ -116,7 +117,7 @@ public class Ball {
                     }
                     Main.timeLine.play();
                     if(keyEvent.getCode() == KeyCode.SPACE){
-                        velocity = - 4;
+                        velocity = -4;
                         mediaPlayer.play();
 
                     }
@@ -131,44 +132,36 @@ public class Ball {
 
 
     public int calculatePosition(){
-        currentY = ball.getLayoutY();
-       // System.out.println("CurrenY:"+currentY);
-        Timeline updateCurrY = new Timeline(new KeyFrame(Duration.millis(200), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                currentY = ball.getLayoutY();
-            }
-        }));
-        updateCurrY.setCycleCount(Timeline.INDEFINITE);
-        updateCurrY.play();
-
-//        timeLine = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler <ActionEvent>() {
-//
-//
-//            float ddy = 0.15f;//Acceleration due to gravity;
-//
+//        currentY = ball.getLayoutY();
+//       // System.out.println("CurrenY:"+currentY);
+//        Timeline updateCurrY = new Timeline(new KeyFrame(Duration.millis(200), new EventHandler<ActionEvent>() {
 //            @Override
-//            public void handle(ActionEvent t) {
-//                //move the ball
-//                //System.out.println("InCurrentY:" + ball.getLayoutY());
-//                if(ball.getLayoutY() <= currentY-40){
-//                    //System.out.println("Into If");
-//                    for(Obstacle ob:obstacleArrayList){
-//                        ob.moveDown();
-//                    }
-//                    Main.moveStars();
-//                    currentY = ball.getLayoutY();
-//                }
-//
-//                ball.setLayoutY(ball.getLayoutY() + velocity);
-//                velocity = velocity + ddy;
-//                if(ball.getLayoutY() >= 600){
-//                    Main.endgameScreen(primaryStage);
-//                    timeLine.stop();
-//                }
+//            public void handle(ActionEvent actionEvent) {
+//                currentY = ball.getLayoutY();
 //            }
 //        }));
-//        timeLine.setCycleCount(Timeline.INDEFINITE);
+//        updateCurrY.setCycleCount(Timeline.INDEFINITE);
+//        updateCurrY.play();
+        final Task task = new Task() {
+
+            @Override
+            protected Object call() throws Exception {
+                currentY = ball.getLayoutY();
+                // System.out.println("CurrenY:"+currentY);
+                Timeline updateCurrY = new Timeline(new KeyFrame(Duration.millis(200), new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        currentY = ball.getLayoutY();
+                    }
+                }));
+                updateCurrY.setCycleCount(Timeline.INDEFINITE);
+                updateCurrY.play();
+                return null;
+            }
+        };
+        Thread thread = new Thread(task);
+        thread.start();
+
 //
         return 0;
     }
@@ -179,35 +172,7 @@ public class Ball {
         String path  = "library/jump.mp3";
         mediaPlayer = new AudioClip(new File(path).toURI().toString());
 
-//        final Task task = new Task() {
-//
-//            @Override
-//            protected Object call() throws Exception {
-//                String path  = "library/jump.mp3";
-//                Media media = new Media(new File(path).toURI().toString());
-//
-//                //Instantiating MediaPlayer class
-//                mediaPlayer = new MediaPlayer(media);
-//
-//
-//                //by setting this property to true, the audio will be played
-//                //mediaPlayer.setAutoPlay(true);
-//                mediaPlayer.setVolume(0.1);
-//                return null;
-//            }
-//        };
-//        Thread thread = new Thread(task);
-//        thread.start();
-//        String path  = "library/jump.mp3";
-//        Media media = new Media(new File(path).toURI().toString());
-//
-//        //Instantiating MediaPlayer class
-//        mediaPlayer = new MediaPlayer(media);
-//
-//
-//        //by setting this property to true, the audio will be played
-//        //mediaPlayer.setAutoPlay(true);
-//        mediaPlayer.setVolume(0.1);
+
     }
     public ballSerialize getSerializableObject(){
         ballSerialize b = new ballSerialize((int)this.ball.getLayoutY(),this.getScore(),this.ball.getId());
