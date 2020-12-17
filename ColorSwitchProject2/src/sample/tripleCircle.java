@@ -24,6 +24,7 @@ public class tripleCircle extends Obstacle{
         this.setPosY(posY);
         this.setOrientation(Orientation);
         this.setGameBall(gameBall);
+        this.type = "tripleCircle";
 
         Arc arc1 =new Arc();
         arc1.setStroke(purpleColor);
@@ -203,7 +204,7 @@ public class tripleCircle extends Obstacle{
 //        Rotate rotate = new Rotate(5,posX,posY);
 //        //rotate.setAngle(50);
 //        circleObstacle.getTransforms().add(rotate);
-        Rotate rotate = new Rotate(15.0f,posX,posY);
+        rotate = new Rotate(15.0f,posX,posY);
         //rotate.setAngle(50);
 //        squareObstacle.getTransforms().add(rotate);
         arc1.getTransforms().add(rotate);
@@ -225,7 +226,7 @@ public class tripleCircle extends Obstacle{
                 new KeyValue(rotate.angleProperty(),0)
         );
         KeyFrame key2 =new KeyFrame(
-                new javafx.util.Duration(2800),
+                new javafx.util.Duration(Obstacle.rotationSpeed),
                 new KeyValue(rotate.angleProperty(),360)
         );
         rotationTimeline.setCycleCount(Animation.INDEFINITE);
@@ -247,8 +248,11 @@ public class tripleCircle extends Obstacle{
     @Override
     public void moveDown(){
         //System.out.println("Calling Move down");
+        setPosY(getPosY() + Obstacle.downValue);
+        rotate.setPivotY(getPosY());
         for(Arc arc:Components){
-            arc.setLayoutY(arc.getLayoutY() + this.downValue);
+            arc.setCenterY(arc.getCenterY() + Obstacle.downValue);
+
         }
 
     }
@@ -260,10 +264,6 @@ public class tripleCircle extends Obstacle{
     @Override
     public Object getNewOrientation() {
         return null;
-    }
-    @Override
-    public int getY(){
-        return (int)(((Arc)this.getComponents().getChildren().get(0)).getLayoutY()-250);
     }
 
     @Override
@@ -277,7 +277,7 @@ public class tripleCircle extends Obstacle{
                     if(((Path) Shape.intersect(getGameBall().getBall(),arc)).getElements().size() > 0){
                         //System.out.println("Collision With " + arc.getId());
                         if(!getGameBall().getBall().getId().equals(arc.getId())){
-                            //System.out.println("Dead");
+                            System.out.println("Dead");
                         }
                     }
                 }

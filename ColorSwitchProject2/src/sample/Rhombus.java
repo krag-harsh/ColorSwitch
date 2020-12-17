@@ -25,6 +25,7 @@ public class Rhombus extends Obstacle{
         this.setPosY(posY);
         this.setOrientation(Orientation);
         this.setGameBall(gameBall);
+        this.type = "Rhombus";
 
         Line line1 = new Line();
         line1.setStrokeWidth(10);
@@ -85,7 +86,7 @@ public class Rhombus extends Obstacle{
 //        timeline.setCycleCount(Animation.INDEFINITE);
 //        timeline.getKeyFrames().addAll(key2);
 //        timeline.playFromStart();
-        Rotate rotate = new Rotate(15.0f,posX,posY);
+        rotate = new Rotate(15.0f,posX,posY);
         //rotate.setAngle(50);
 //        squareObstacle.getTransforms().add(rotate);
         line1.getTransforms().add(rotate);
@@ -98,7 +99,7 @@ public class Rhombus extends Obstacle{
                 new KeyValue(rotate.angleProperty(),0)
         );
         KeyFrame key2 =new KeyFrame(
-                new javafx.util.Duration(2800),
+                new javafx.util.Duration(Obstacle.rotationSpeed),
                 new KeyValue(rotate.angleProperty(),360)
         );
         rotationTimeline.setCycleCount(Animation.INDEFINITE);
@@ -108,14 +109,14 @@ public class Rhombus extends Obstacle{
         checkCollision();
     }
     @Override
-    public int getY(){
-        return (int)(((Line)this.getComponents().getChildren().get(0)).getLayoutY()-250);
-    }
-    @Override
     public void moveDown(){
         //System.out.println("Calling Move down");
+        setPosY(getPosY() + Obstacle.downValue);
+        rotate.setPivotY(getPosY());
         for(Line line:Components){
-            line.setLayoutY(line.getLayoutY() + this.downValue);
+            line.setStartY(line.getStartY() + Obstacle.downValue);
+            line.setEndY(line.getEndY() + Obstacle.downValue);
+            //line.setLayoutY(line.getLayoutY() + this.downValue);
         }
 
     }
@@ -141,7 +142,7 @@ public class Rhombus extends Obstacle{
                     if(((Path) Shape.intersect(getGameBall().getBall(),line)).getElements().size() > 0){
                         //System.out.println("Collision With " + line.getId());
                         if(!getGameBall().getBall().getId().equals(line.getId())){
-                            //System.out.println("Dead");
+                            System.out.println("Dead");
                         }
                     }
                 }

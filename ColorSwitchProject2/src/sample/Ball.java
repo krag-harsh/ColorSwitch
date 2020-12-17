@@ -17,16 +17,32 @@ import javafx.scene.shape.Sphere;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
+class ballSerialize implements Serializable{
+    int posY;
+    int score;
+    String color;
+    public ballSerialize(int posY,int score,String color){
+        this.posY = posY;
+        this.score = score;
+        this.color = color;
+    }
+}
 public class Ball {
+
     private int posX = 225;
-    private int posY = 530;
+    private int posY;
     private float velocity = 0;
     private int color;
-    private int starCount;
-    private int score = -1;
+    private int score = 0;
+    private int start = -1;
     private Circle ball;
+    public static Color purpleColor = Color.rgb(141,20,249);
+    public static Color yellowColor = Color.rgb(245,224,13);
+    public static Color cyanColor = Color.rgb(54,225,243);
+    public static Color magentaColor = Color.rgb(255,0,128);
     //Timeline timeLine;
 
     double currentY;
@@ -49,14 +65,6 @@ public class Ball {
         this.currentY = currentY;
     }
 
-    public int getStarCount() {
-        return starCount;
-    }
-
-    public void setStarCount(int starCount) {
-        this.starCount = starCount;
-    }
-
     public int getScore() {
         return score;
     }
@@ -73,26 +81,30 @@ public class Ball {
         this.ball = ball;
     }
 
-    public Ball(Group root, Scene gameplayScene, ImageView imageView){
+    public Ball(Group root, Scene gameplayScene, ImageView imageView,int posY,String Color){
 
-            Color purpleColor = Color.rgb(141,20,249);
-            Color yellowColor = Color.rgb(245,224,13);
-            Color cyanColor = Color.rgb(54,225,243);
-            Color magentaColor = Color.rgb(255,0,128);
-            ball = new Circle(10.0f, Color.BLUE);
+            this.posY = posY;
+            ball = new Circle(10.0f);
             ball.setLayoutX(posX);
             ball.setLayoutY(posY);
-            ball.setFill(magentaColor);
-            ball.setId("magenta");
+            ball.setId(Color);
+            switch (Color) {
+                case "magenta" -> ball.setFill(magentaColor);
+                case "cyan" -> ball.setFill(cyanColor);
+                case "purple" -> ball.setFill(purpleColor);
+                case "yellow" -> ball.setFill(yellowColor);
+            }
             root.getChildren().add(ball);
 
             gameplayScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent keyEvent) {
-                    if(score<0) {
+                    if(start<0) {
                         Main.timeLine.play();
-                        score = 0;
-                        root.getChildren().remove(imageView);
+                        start = 0;
+                        if(imageView != null) {
+                            root.getChildren().remove(imageView);
+                        }
                     }
                     if(keyEvent.getCode() == KeyCode.SPACE){
                         velocity = - 4;
@@ -150,6 +162,10 @@ public class Ball {
     }
     public void changePosition(){
 
+    }
+    public ballSerialize getSerializableObject(){
+        ballSerialize b = new ballSerialize((int)this.ball.getLayoutY(),this.getScore(),this.ball.getId());
+        return b;
     }
 
 }
