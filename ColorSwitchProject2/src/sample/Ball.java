@@ -106,6 +106,7 @@ public class Ball {
                             root.getChildren().remove(imageView);
                         }
                     }
+                    Main.timeLine.play();
                     if(keyEvent.getCode() == KeyCode.SPACE){
                         velocity = - 4;
                     }

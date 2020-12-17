@@ -247,7 +247,7 @@ public class Main extends Application {
             }
             ArrayList<Object> readGame;
             readGame = readSavedGame.get(selectedIndex);
-            
+
             ballSerialize serializedBall = (ballSerialize)readGame.get(0);
             //System.out.println("Retrieved Ball PosY" + serializedBall.posY);
 //            if(readGame.size() == 4){
@@ -424,6 +424,12 @@ public class Main extends Application {
         resumeButton.setStyle("-fx-background-color: #f6df0b; -fx-font-size: 1.5em;");
         root.getChildren().add(resumeButton);
 
+        Text score = new Text("Score:" + gameBall.getScore());
+        score.setFont(Font.font("WHITE", FontWeight.BOLD, FontPosture.REGULAR,20));
+        score.setFill(Color.WHITE);
+        score.setLayoutX(10);
+        score.setLayoutY(20);
+        score.setStrokeWidth(500);
         root.getChildren().add(score);
         //Save State Button
         Button saveButton = new Button();
@@ -457,6 +463,14 @@ public class Main extends Application {
         }
         finalprimaryStage.show();
     }
+    public static void continueGame(Stage finalprimaryStage,Scene gameplayScene,Ball gameBall){
+        finalprimaryStage.setScene(gameplayScene);
+        //timeLine.play();
+        for(Obstacle ob:obstacleArrayList){
+            ob.resumeTimeline();
+        }
+        finalprimaryStage.show();
+    }
     public static void endgameScreen(Stage finalprimaryStage){
         finalprimaryStage.setTitle("EndGame Screen");
         Group root = new Group();
@@ -464,7 +478,17 @@ public class Main extends Application {
         Color backgroundColor = Color.rgb(41,41,41);
         endgameScene.setFill(backgroundColor);
 
+
+        Text score = new Text("Score:" + gameBall.getScore());
+        score.setUnderline(true);
+        score.setFont(Font.font("WHITE", FontWeight.BOLD, FontPosture.REGULAR,20));
+        score.setFill(Color.WHITE);
+        score.setStyle("-fx-font: 48 arial;");
+        score.setLayoutX(140);
+        score.setLayoutY(500);
+        score.setStrokeWidth(1000);
         root.getChildren().add(score);
+
         //Color Switch Logo
         ImageView imageView = null;
         try {
@@ -519,12 +543,6 @@ public class Main extends Application {
 //                System.out.println("Continuing with points...");
 //            }
 //        });
-        continueButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                System.out.println("Continuing with points...");
-            }
-        });
 
         continueButton.setLayoutX(132);
         continueButton.setLayoutY(250);
@@ -557,6 +575,18 @@ public class Main extends Application {
         root.getChildren().add(menuButton);
         finalprimaryStage.setScene(endgameScene);
         finalprimaryStage.show();
+        continueButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if(gameBall.getScore() >=7){
+                    continueGame(finalprimaryStage,gamePlayScene,gameBall);
+                    gameBall.getBall().setLayoutY(obstacleArrayList.get(0).getPosY() - 180);
+                    gameBall.setScore(gameBall.getScore() - 7);
+                    System.out.println("Continuing with points...");
+                }
+
+            }
+        });
     }
     public static void moveStars(){
         colorPallete.setY(colorPallete.getY() + Obstacle.downValue);
@@ -584,7 +614,10 @@ public class Main extends Application {
             //ballSerialize ob = (ballSerialize)readGame.get(0);
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Saved Games File not Present");
+            System.out.println("Save Games First");
+            readSavedGames = new ArrayList<>();
+            //e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
