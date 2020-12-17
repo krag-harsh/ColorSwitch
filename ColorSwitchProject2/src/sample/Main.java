@@ -4,6 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -15,6 +16,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Line;
@@ -26,6 +31,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -41,18 +47,51 @@ public class Main extends Application {
     public static Stage finalprimaryStage;
     public static Scene gamePlayScene;
     public static int selectedIndex = 0;
+    public static MediaPlayer mediaPlayer;
+    public static AudioClip starSound = new AudioClip(new File("library/star.mp3").toURI().toString());
+    //public static AudioClip deadSound = new AudioClip(new File("library/dead.mp3").toURI().toString());
+    public static AudioClip switchSound = new AudioClip(new File("library/switch.mp3").toURI().toString());
 
     public static Text score;
     @Override
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         //Importing and Loading the image on main screen;
+        final Task task = new Task() {
+
+            @Override
+            protected Object call() throws Exception {
+                String path  = "library/backgroundMusic.mp3";
+                Media media = new Media(new File(path).toURI().toString());
+
+                //Instantiating MediaPlayer class
+                mediaPlayer = new MediaPlayer(media);
+
+
+                //by setting this property to true, the audio will be played
+                mediaPlayer.setAutoPlay(true);
+                mediaPlayer.setVolume(0.5);
+                mediaPlayer.setCycleCount(10);
+                return null;
+            }
+        };
+        Thread thread = new Thread(task);
+        thread.start();
+//        String path  = "backgroundMusic.mp3";
+//        Media media = new Media(new File(path).toURI().toString());
+//
+//        //Instantiating MediaPlayer class
+//        MediaPlayer mediaPlayer = new MediaPlayer(media);
+//
+//        //by setting this property to true, the audio will be played
+//        mediaPlayer.setAutoPlay(true);
         mainMenu(primaryStage);
         finalprimaryStage =primaryStage;
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         launch(args);
     }
     public static void mainMenu(Stage primaryStage) throws FileNotFoundException {
@@ -159,6 +198,7 @@ public class Main extends Application {
         finalprimaryStage.show();
     }
     public static void gameStart(Stage finalprimaryStage) throws FileNotFoundException {
+        mediaPlayer.setVolume(0.1);
         obstacleArrayList = new ArrayList<>();
         finalprimaryStage.setTitle("GamePlay");
         Group root =   new Group();
@@ -472,6 +512,7 @@ public class Main extends Application {
         finalprimaryStage.show();
     }
     public static void endgameScreen(Stage finalprimaryStage){
+        mediaPlayer.setVolume(0.5);
         finalprimaryStage.setTitle("EndGame Screen");
         Group root = new Group();
         Scene endgameScene = new Scene(root,450,650);
@@ -657,15 +698,132 @@ public class Main extends Application {
         finalprimaryStage.show();
     }
     public static void startTimeline(Ball gameBall,Stage finalprimaryStage,Group gamePlayRoot){
-        timeLine = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler <ActionEvent>() {
-
-
-            float ddy = 0.15f;//Acceleration due to gravity;
+//        timeLine = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler <ActionEvent>() {
+//
+//
+//            float ddy = 0.15f;//Acceleration due to gravity;
+//
+//            @Override
+//            public void handle(ActionEvent t) {
+//                //move the ball
+//                //System.out.println("InCurrentY:" + ball.getLayoutY());
+////                Iterator<ImageView> starIterator = Stars.iterator();
+////                while(starIterator.hasNext()){
+////                    ImageView star = starIterator.next();
+////                    //System.out.println("Star" + (star.getLayoutY() + 20));
+////                    //System.out.println("Ball" + gameBall.getBall().getLayoutY());
+////                    if((star.getLayoutY() + 40) >= gameBall.getBall().getLayoutY()){
+////                        star.setVisible(false);
+////                        starIterator.remove();
+////                       // finalprimaryStage.getScene().getRoot().getChildren().remove(star);
+////                       gameBall.setScore(gameBall.getScore() + 1);
+////                       System.out.println("Score" + gameBall.getScore());
+////                        //System.out.println("Test");
+////                    }
+////                }
+//                if((colorPallete.getY() + 40) >= gameBall.getBall().getLayoutY()){
+//                    colorPallete.setY(star.getLayoutY() - 230);
+//                    int checkColor = -1;
+//                    String color = gameBall.getBall().getId();
+//                    switch (color) {
+//                        case "purple" -> checkColor = 0;
+//                        case "magenta" -> checkColor = 1;
+//                        case "cyan" -> checkColor = 2;
+//                        case "yellow" -> checkColor = 3;
+//                    }
+//                    Random rand = new Random();
+//                    int upperbound = 4;
+//                    int number = rand.nextInt(upperbound);
+//                    while(checkColor == number){
+//                        number = rand.nextInt(upperbound);
+//                    }
+//
+//                    switch (number) {
+//                        case 0 -> {
+//                            gameBall.getBall().setFill(Ball.purpleColor);
+//                            gameBall.getBall().setId("purple");
+//                        }
+//                        case 1 -> {
+//                            gameBall.getBall().setFill(Ball.magentaColor);
+//                            gameBall.getBall().setId("magenta");
+//                        }
+//                        case 2 -> {
+//                            gameBall.getBall().setFill(Ball.cyanColor);
+//                            gameBall.getBall().setId("cyan");
+//                        }
+//                        case 3 -> {
+//                            gameBall.getBall().setFill(Ball.yellowColor);
+//                            gameBall.getBall().setId("yellow");
+//                        }
+//                    }
+//                }
+//                if((star.getLayoutY() + 40) >= gameBall.getBall().getLayoutY()){
+//
+//                    gameBall.setScore(gameBall.getScore() + 1);
+//                    Obstacle.updateDownValue();
+//
+//                    //System.out.println("Score" + gameBall.getScore());
+//                    score.setText("Score:" + gameBall.getScore());
+//                    currentObstacle = spawnNextObstacle(gameBall);
+//                    obstacleArrayList.add(currentObstacle);
+//                    gamePlayRoot.getChildren().add(currentObstacle.getComponents());
+//                    //System.out.println("Before Current" + currentObstacle.getClass().getName());
+//                   // currentObstacle = next;
+//                   // next = null;
+//                    //System.out.println("After Current" + currentObstacle.getClass().getName());
+//
+//                    star.setLayoutY(star.getLayoutY()-470);
+//                    //System.out.println("PosY" + currentObstacle.getY());
+//
+//                    // finalprimaryStage.getScene().getRoot().getChildren().remove(star);
+//
+//
+//                    //System.out.println("Test");
+//                }
+//                if(gameBall.getBall().getLayoutY() <= 400){
+//                    //System.out.println("Into If");
+//                    Iterator<Obstacle> i = obstacleArrayList.iterator();
+//                    while(i.hasNext()){
+//                        Obstacle ob = i.next();
+//                        ob.moveDown();
+//                        if(ob.getPosY() > 900){
+//                            ob.pauseTimeline();
+//                            i.remove();
+//                            //System.out.println("Obstacle" + ob.getClass().getName() + "has been removed");
+//                        }
+//                    }
+////                    for(Obstacle ob:obstacleArrayList){
+////                        ob.moveDown();
+////                    }
+//                    Main.moveStars();
+//                    gameBall.setCurrentY(gameBall.getBall().getLayoutY());
+//                }
+//
+//                gameBall.getBall().setLayoutY(gameBall.getBall().getLayoutY() + gameBall.getVelocity());
+//                gameBall.setVelocity(gameBall.getVelocity() + ddy);
+//                if(gameBall.getBall().getLayoutY() >= 600){
+//                    Main.endgameScreen(finalprimaryStage);
+//                    timeLine.stop();
+//                    for(Obstacle ob:obstacleArrayList){
+//                        ob.pauseTimeline();
+//                    }
+//                }
+//            }
+//        }));
+//        timeLine.setCycleCount(Timeline.INDEFINITE);
+        final Task task = new Task() {
 
             @Override
-            public void handle(ActionEvent t) {
-                //move the ball
-                //System.out.println("InCurrentY:" + ball.getLayoutY());
+            protected Object call() throws Exception {
+                timeLine = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler <ActionEvent>() {
+
+
+                    float ddy = 0.15f;//Acceleration due to gravity;
+
+                    @Override
+                    public void handle(ActionEvent t) {
+                        //move the ball
+                        //System.out.println("InCurrentY:" + ball.getLayoutY());
 //                Iterator<ImageView> starIterator = Stars.iterator();
 //                while(starIterator.hasNext()){
 //                    ImageView star = starIterator.next();
@@ -680,97 +838,102 @@ public class Main extends Application {
 //                        //System.out.println("Test");
 //                    }
 //                }
-                if((colorPallete.getY() + 40) >= gameBall.getBall().getLayoutY()){
-                    colorPallete.setY(star.getLayoutY() - 230);
-                    int checkColor = -1;
-                    String color = gameBall.getBall().getId();
-                    switch (color) {
-                        case "purple" -> checkColor = 0;
-                        case "magenta" -> checkColor = 1;
-                        case "cyan" -> checkColor = 2;
-                        case "yellow" -> checkColor = 3;
-                    }
-                    Random rand = new Random();
-                    int upperbound = 4;
-                    int number = rand.nextInt(upperbound);
-                    while(checkColor == number){
-                        number = rand.nextInt(upperbound);
-                    }
+                        if((colorPallete.getY() + 40) >= gameBall.getBall().getLayoutY()){
+                            switchSound.play();
+                            colorPallete.setY(star.getLayoutY() - 230);
+                            int checkColor = -1;
+                            String color = gameBall.getBall().getId();
+                            switch (color) {
+                                case "purple" -> checkColor = 0;
+                                case "magenta" -> checkColor = 1;
+                                case "cyan" -> checkColor = 2;
+                                case "yellow" -> checkColor = 3;
+                            }
+                            Random rand = new Random();
+                            int upperbound = 4;
+                            int number = rand.nextInt(upperbound);
+                            while(checkColor == number){
+                                number = rand.nextInt(upperbound);
+                            }
 
-                    switch (number) {
-                        case 0 -> {
-                            gameBall.getBall().setFill(Ball.purpleColor);
-                            gameBall.getBall().setId("purple");
+                            switch (number) {
+                                case 0 -> {
+                                    gameBall.getBall().setFill(Ball.purpleColor);
+                                    gameBall.getBall().setId("purple");
+                                }
+                                case 1 -> {
+                                    gameBall.getBall().setFill(Ball.magentaColor);
+                                    gameBall.getBall().setId("magenta");
+                                }
+                                case 2 -> {
+                                    gameBall.getBall().setFill(Ball.cyanColor);
+                                    gameBall.getBall().setId("cyan");
+                                }
+                                case 3 -> {
+                                    gameBall.getBall().setFill(Ball.yellowColor);
+                                    gameBall.getBall().setId("yellow");
+                                }
+                            }
                         }
-                        case 1 -> {
-                            gameBall.getBall().setFill(Ball.magentaColor);
-                            gameBall.getBall().setId("magenta");
+                        if((star.getLayoutY() + 40) >= gameBall.getBall().getLayoutY()){
+                            starSound.play();
+                            gameBall.setScore(gameBall.getScore() + 1);
+                            Obstacle.updateDownValue();
+
+                            //System.out.println("Score" + gameBall.getScore());
+                            score.setText("Score:" + gameBall.getScore());
+                            currentObstacle = spawnNextObstacle(gameBall);
+                            obstacleArrayList.add(currentObstacle);
+                            gamePlayRoot.getChildren().add(currentObstacle.getComponents());
+                            //System.out.println("Before Current" + currentObstacle.getClass().getName());
+                            // currentObstacle = next;
+                            // next = null;
+                            //System.out.println("After Current" + currentObstacle.getClass().getName());
+
+                            star.setLayoutY(star.getLayoutY()-470);
+                            //System.out.println("PosY" + currentObstacle.getY());
+
+                            // finalprimaryStage.getScene().getRoot().getChildren().remove(star);
+
+
+                            //System.out.println("Test");
                         }
-                        case 2 -> {
-                            gameBall.getBall().setFill(Ball.cyanColor);
-                            gameBall.getBall().setId("cyan");
-                        }
-                        case 3 -> {
-                            gameBall.getBall().setFill(Ball.yellowColor);
-                            gameBall.getBall().setId("yellow");
-                        }
-                    }
-                }
-                if((star.getLayoutY() + 40) >= gameBall.getBall().getLayoutY()){
-
-                    gameBall.setScore(gameBall.getScore() + 1);
-                    Obstacle.updateDownValue();
-
-                    //System.out.println("Score" + gameBall.getScore());
-                    score.setText("Score:" + gameBall.getScore());
-                    currentObstacle = spawnNextObstacle(gameBall);
-                    obstacleArrayList.add(currentObstacle);
-                    gamePlayRoot.getChildren().add(currentObstacle.getComponents());
-                    //System.out.println("Before Current" + currentObstacle.getClass().getName());
-                   // currentObstacle = next;
-                   // next = null;
-                    System.gc();
-                    //System.out.println("After Current" + currentObstacle.getClass().getName());
-
-                    star.setLayoutY(star.getLayoutY()-470);
-                    //System.out.println("PosY" + currentObstacle.getY());
-
-                    // finalprimaryStage.getScene().getRoot().getChildren().remove(star);
-
-
-                    //System.out.println("Test");
-                }
-                if(gameBall.getBall().getLayoutY() <= 400){
-                    //System.out.println("Into If");
-                    Iterator<Obstacle> i = obstacleArrayList.iterator();
-                    while(i.hasNext()){
-                        Obstacle ob = i.next();
-                        ob.moveDown();
-                        if(ob.getPosY() > 900){
-                            ob.pauseTimeline();
-                            i.remove();
-                            //System.out.println("Obstacle" + ob.getClass().getName() + "has been removed");
-                        }
-                    }
+                        if(gameBall.getBall().getLayoutY() <= 400){
+                            //System.out.println("Into If");
+                            Iterator<Obstacle> i = obstacleArrayList.iterator();
+                            while(i.hasNext()){
+                                Obstacle ob = i.next();
+                                ob.moveDown();
+                                if(ob.getPosY() > 900){
+                                    ob.pauseTimeline();
+                                    i.remove();
+                                    //System.out.println("Obstacle" + ob.getClass().getName() + "has been removed");
+                                }
+                            }
 //                    for(Obstacle ob:obstacleArrayList){
 //                        ob.moveDown();
 //                    }
-                    Main.moveStars();
-                    gameBall.setCurrentY(gameBall.getBall().getLayoutY());
-                }
+                            Main.moveStars();
+                            gameBall.setCurrentY(gameBall.getBall().getLayoutY());
+                        }
 
-                gameBall.getBall().setLayoutY(gameBall.getBall().getLayoutY() + gameBall.getVelocity());
-                gameBall.setVelocity(gameBall.getVelocity() + ddy);
-                if(gameBall.getBall().getLayoutY() >= 600){
-                    Main.endgameScreen(finalprimaryStage);
-                    timeLine.stop();
-                    for(Obstacle ob:obstacleArrayList){
-                        ob.pauseTimeline();
+                        gameBall.getBall().setLayoutY(gameBall.getBall().getLayoutY() + gameBall.getVelocity());
+                        gameBall.setVelocity(gameBall.getVelocity() + ddy);
+                        if(gameBall.getBall().getLayoutY() >= 600){
+                            Main.endgameScreen(finalprimaryStage);
+                            timeLine.stop();
+                            for(Obstacle ob:obstacleArrayList){
+                                ob.pauseTimeline();
+                            }
+                        }
                     }
-                }
+                }));
+                timeLine.setCycleCount(Timeline.INDEFINITE);
+                return null;
             }
-        }));
-        timeLine.setCycleCount(Timeline.INDEFINITE);
+        };
+        Thread thread = new Thread(task);
+        thread.start();
 
     }
 

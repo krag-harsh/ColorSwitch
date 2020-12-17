@@ -3,6 +3,7 @@ package sample;
 import com.sun.prism.PhongMaterial;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -11,12 +12,16 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -24,6 +29,7 @@ class ballSerialize implements Serializable{
     int posY;
     int score;
     String color;
+
     public ballSerialize(int posY,int score,String color){
         this.posY = posY;
         this.score = score;
@@ -39,6 +45,7 @@ public class Ball {
     private int score = 0;
     private int start = -1;
     private Circle ball;
+    AudioClip mediaPlayer;
     public static Color purpleColor = Color.rgb(141,20,249);
     public static Color yellowColor = Color.rgb(245,224,13);
     public static Color cyanColor = Color.rgb(54,225,243);
@@ -99,6 +106,7 @@ public class Ball {
             gameplayScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent keyEvent) {
+
                     if(start<0) {
                         Main.timeLine.play();
                         start = 0;
@@ -109,10 +117,13 @@ public class Ball {
                     Main.timeLine.play();
                     if(keyEvent.getCode() == KeyCode.SPACE){
                         velocity = - 4;
+                        mediaPlayer.play();
+
                     }
                 }
             });
             calculatePosition();
+            playSound();
 
 
     }
@@ -163,6 +174,40 @@ public class Ball {
     }
     public void changePosition(){
 
+    }
+    public void playSound(){
+        String path  = "library/jump.mp3";
+        mediaPlayer = new AudioClip(new File(path).toURI().toString());
+
+//        final Task task = new Task() {
+//
+//            @Override
+//            protected Object call() throws Exception {
+//                String path  = "library/jump.mp3";
+//                Media media = new Media(new File(path).toURI().toString());
+//
+//                //Instantiating MediaPlayer class
+//                mediaPlayer = new MediaPlayer(media);
+//
+//
+//                //by setting this property to true, the audio will be played
+//                //mediaPlayer.setAutoPlay(true);
+//                mediaPlayer.setVolume(0.1);
+//                return null;
+//            }
+//        };
+//        Thread thread = new Thread(task);
+//        thread.start();
+//        String path  = "library/jump.mp3";
+//        Media media = new Media(new File(path).toURI().toString());
+//
+//        //Instantiating MediaPlayer class
+//        mediaPlayer = new MediaPlayer(media);
+//
+//
+//        //by setting this property to true, the audio will be played
+//        //mediaPlayer.setAutoPlay(true);
+//        mediaPlayer.setVolume(0.1);
     }
     public ballSerialize getSerializableObject(){
         ballSerialize b = new ballSerialize((int)this.ball.getLayoutY(),this.getScore(),this.ball.getId());
