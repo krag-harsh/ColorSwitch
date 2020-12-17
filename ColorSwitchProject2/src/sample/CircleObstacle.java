@@ -11,19 +11,24 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.security.Key;
+import java.util.concurrent.TimeUnit;
 
 public class CircleObstacle extends Obstacle{
     Group circleObstacle;
     public Arc Components[];
+    Stage primaryStage;
     Rotate rotate;
-    public CircleObstacle(int posX, int posY, Object Orientation, Ball gameBall){
+    public CircleObstacle(int posX, int posY, Object Orientation, Ball gameBall, Stage primaryStage){
         Color purpleColor = Color.rgb(141,20,249);
         Color yellowColor = Color.rgb(245,224,13);
         Color cyanColor = Color.rgb(54,225,243);
         Color magentaColor = Color.rgb(255,0,128);
+        double radius = 100.0;
+        this.primaryStage = primaryStage;
         this.setPosX(posX);
         this.setPosY(posY);
         this.setOrientation(Orientation);
@@ -34,8 +39,8 @@ public class CircleObstacle extends Obstacle{
         arc1.setStrokeWidth(10);
         arc1.setCenterX(posX);
         arc1.setCenterY(posY);
-        arc1.setRadiusX(90.0f);
-        arc1.setRadiusY(90.0f);
+        arc1.setRadiusX(radius);
+        arc1.setRadiusY(radius);
         arc1.setStartAngle(270.0f);
         arc1.setLength(90.0f);
         arc1.setFill(Color.TRANSPARENT);
@@ -47,8 +52,8 @@ public class CircleObstacle extends Obstacle{
         arc2.setStrokeWidth(10);
         arc2.setCenterX(posX);
         arc2.setCenterY(posY);
-        arc2.setRadiusX(90.0f);
-        arc2.setRadiusY(90.0f);
+        arc2.setRadiusX(radius);
+        arc2.setRadiusY(radius);
         arc2.setStartAngle(180.0f);
         arc2.setLength(90.0f);
         arc2.setFill(Color.TRANSPARENT);
@@ -60,8 +65,8 @@ public class CircleObstacle extends Obstacle{
         arc3.setStrokeWidth(10);
         arc3.setCenterX(posX);
         arc3.setCenterY(posY);
-        arc3.setRadiusX(90.0f);
-        arc3.setRadiusY(90.0f);
+        arc3.setRadiusX(radius);
+        arc3.setRadiusY(radius);
         arc3.setStartAngle(90.0f);
         arc3.setLength(90.0f);
         arc3.setFill(Color.TRANSPARENT);
@@ -73,8 +78,8 @@ public class CircleObstacle extends Obstacle{
         arc4.setStrokeWidth(10);
         arc4.setCenterX(posX);
         arc4.setCenterY(posY);
-        arc4.setRadiusX(90.0f);
-        arc4.setRadiusY(90.0f);
+        arc4.setRadiusX(radius);
+        arc4.setRadiusY(radius);
         arc4.setStartAngle(0.0f);
         arc4.setLength(90.0f);
         arc4.setFill(Color.TRANSPARENT);
@@ -163,7 +168,14 @@ public class CircleObstacle extends Obstacle{
                     if(((Path)Shape.intersect(getGameBall().getBall(),arc)).getElements().size() > 0){
                         //System.out.println("Collision With " + arc.getId());
                         if(!getGameBall().getBall().getId().equals(arc.getId())){
-                            System.out.println("Dead");
+                            //System.out.println("Dead");
+//                            try {
+//                                TimeUnit.MILLISECONDS.sleep(500);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+
+                            Main.endgameScreen(primaryStage);
                         }
                     }
                 }

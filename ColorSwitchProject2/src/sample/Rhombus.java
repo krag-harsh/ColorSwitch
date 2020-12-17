@@ -11,16 +11,19 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Rhombus extends Obstacle{
     Group rhombusObstacle;
     Line Components[];
-    public Rhombus(int posX, int posY, Object Orientation, Ball gameBall){
+    Stage primaryStage;
+    public Rhombus(int posX, int posY, Object Orientation, Ball gameBall,Stage primaryStage){
         Color purpleColor = Color.rgb(141,20,249);
         Color yellowColor = Color.rgb(245,224,13);
         Color cyanColor = Color.rgb(54,225,243);
         Color magentaColor = Color.rgb(255,0,128);
+        this.primaryStage = primaryStage;
         this.setPosX(posX);
         this.setPosY(posY);
         this.setOrientation(Orientation);
@@ -142,7 +145,8 @@ public class Rhombus extends Obstacle{
                     if(((Path) Shape.intersect(getGameBall().getBall(),line)).getElements().size() > 0){
                         //System.out.println("Collision With " + line.getId());
                         if(!getGameBall().getBall().getId().equals(line.getId())){
-                            System.out.println("Dead");
+                            //System.out.println("Dead");
+                            Main.endgameScreen(primaryStage);
                         }
                     }
                 }
