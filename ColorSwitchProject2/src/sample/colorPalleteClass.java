@@ -6,13 +6,14 @@ import javafx.scene.image.ImageView;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+
 public class colorPalleteClass implements gameElements {
     private ImageView colorPallete;
     public colorPalleteClass(double posY) throws FileNotFoundException {
         Image colorPaleteImage = new Image(new FileInputStream("library/colorPallete.jpeg"));
         colorPallete = new ImageView(colorPaleteImage);
         colorPallete.setLayoutX(205);
-        colorPallete.setLayoutY(posY-230);
+        colorPallete.setY(posY-230);
         colorPallete.setFitHeight(40);
         colorPallete.setFitWidth(40);
         colorPallete.setPreserveRatio(true);

@@ -239,7 +239,7 @@ public class Main extends Application {
             }
 
             ballSerialize serializedBall = (ballSerialize)readGame.get(0);
-            System.out.println("Retrieved Ball PosY" + serializedBall.posY);
+            //System.out.println("Retrieved Ball PosY" + serializedBall.posY);
 //            if(readGame.size() == 4){
 //                readGame.remove(1);
 //            }
@@ -266,7 +266,7 @@ public class Main extends Application {
             gameBall.setScore(serializedBall.score);
             startTimeline(gameBall,primaryStage,root);
             ArrayList<Obstacle> serializedObstacle = new ArrayList<>();
-            for(int i=1;i<readGame.size();i++){
+            for(int i=2;i<readGame.size();i++){
                 ObstacleSerialize ob1 = ((ObstacleSerialize)readGame.get(i));
                 System.out.println("retreived Ob" + ob1.type + "PosY" + ob1.posY);
                 switch(ob1.type){
@@ -343,7 +343,7 @@ public class Main extends Application {
             }
 
             //Adding ColorPallete
-            colorProvider = new colorPalleteClass(currentObstacle.getPosY());
+            colorProvider = new colorPalleteClass((double)readGame.get(1) + 230);
             colorPallete = colorProvider.getColorPallete();
             root.getChildren().add(colorPallete);
 
@@ -370,7 +370,6 @@ public class Main extends Application {
                     for(Obstacle ob:obstacleArrayList){
                         ob.pauseTimeline();
                     }
-                    TestRead();
                     pauseScreen(primaryStage, finalGamePlayScene,gameBall);
                 }
             }
@@ -534,7 +533,8 @@ public class Main extends Application {
         primaryStage.show();
     }
     public static void moveStars(){
-        colorPallete.setLayoutY(colorPallete.getLayoutY() + Obstacle.downValue);
+        colorPallete.setY(colorPallete.getY() + Obstacle.downValue);
+        //System.out.println("ColorLayoutY" + colorPallete.getY());
         star.setLayoutY(star.getLayoutY() + Obstacle.downValue);
     }
     public static void savedStateScene(Stage primaryStage){
@@ -577,8 +577,8 @@ public class Main extends Application {
 //                        //System.out.println("Test");
 //                    }
 //                }
-                if((colorPallete.getLayoutY() + 40) >= gameBall.getBall().getLayoutY()){
-                    colorPallete.setLayoutY(star.getLayoutY() - 230);
+                if((colorPallete.getY() + 40) >= gameBall.getBall().getLayoutY()){
+                    colorPallete.setY(star.getLayoutY() - 230);
                     int checkColor = -1;
                     String color = gameBall.getBall().getId();
                     switch (color) {
@@ -695,10 +695,12 @@ public class Main extends Application {
             //System.out.println(gameBall.getSerializableObject().getClass().getName());
             ArrayList<Object> saveGame = new ArrayList<>();
             saveGame.add(gameBall.getSerializableObject());
-            System.out.println("Saving Ball PosY" + gameBall.getSerializableObject().posY);
+            saveGame.add(colorPallete.getY());
+            //System.out.println("Saving Ball PosY" + gameBall.getSerializableObject().posY);
+            //System.out.println("Saving ColorPallete PosY" + colorPallete.getY());
             for(Obstacle ob:obstacleArrayList){
                 saveGame.add(ob.getserializableObject());
-                System.out.println("Saving Obstacle" + ob.getClass().getName() + "PosY" + ob.getserializableObject().posY);
+                //System.out.println("Saving Obstacle" + ob.getClass().getName() + "PosY" + ob.getserializableObject().posY);
             }
             out.writeObject(saveGame);
             out.close();
@@ -711,25 +713,5 @@ public class Main extends Application {
         }
     }
 
-    public static void TestRead(){
-//        try{
-//            FileInputStream fis = new FileInputStream("/savedGames.ser");
-//            ObjectInputStream ois = new ObjectInputStream(fis);
-//            ArrayList<Object> readGame = null;
-//            readGame = (ArrayList<Object>)ois.readObject();
-//            ballSerialize ob = (ballSerialize)readGame.get(0);
-//            System.out.println("PosY" + ob.posY);
-//            System.out.println("Color" + ob.color);
-//            System.out.println("Score" + ob.score);
-//
-//
-//        }
-//        catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-    }
+
 }
